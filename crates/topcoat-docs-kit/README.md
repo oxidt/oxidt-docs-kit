@@ -83,7 +83,7 @@ Serve `STYLESHEET` at `/docs-kit.css`, route `/docs/{*doc_path}` to
 `document`, and route `/docs/search` to a page that renders
 `docs_search_head(query)` + `docs_search_page(registry, base_path, query)` with
 the `q` query parameter. The full app is
-[`examples/topcoat-docs`](https://github.com/hauju/dioxus-docs-kit/tree/main/examples/topcoat-docs):
+[`examples/topcoat-docs`](https://github.com/oxidt/oxidt-docs-kit/tree/main/examples/topcoat-docs):
 
 ```sh
 cargo run -p topcoat-docs-example   # http://127.0.0.1:3000/docs
