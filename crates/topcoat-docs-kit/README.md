@@ -25,8 +25,15 @@ tabs, accordions and copy buttons work in plain HTML.
   code blocks and code groups (syntax highlighted), param/response fields,
   request/response examples, changelog updates, the inline `<OpenAPI>`
   spec viewer, and Mermaid diagrams (`mermaid` feature, on by default; once a
-  diagram nears the viewport the browser loads mermaid's ESM build from
-  jsDelivr, as in the Dioxus kit).
+  diagram nears the viewport the browser loads bundled Pele modules from
+  your app, as in the Dioxus kit). Register the asset route once:
+
+  ```rust,ignore
+  Router::builder().route(topcoat_docs_kit::diagram_assets)
+  ```
+
+  This serves `/_docs/pele/<version>/…` directly from the binary; no CDN,
+  asset-copy step, or Bun installation is required for consumers.
 
 - Light/dark toggle (with `DocsConfig::with_theme_toggle`): a header button
   plus `docs_theme_script` for `<head>`, which applies the stored choice

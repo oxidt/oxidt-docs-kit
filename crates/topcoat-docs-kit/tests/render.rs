@@ -358,9 +358,11 @@ async fn mermaid_fences_render_as_diagrams() {
 
     // Source stays escaped text inside the <pre>; the driver runs once.
     assert!(
-        html.contains("<pre class=\"mermaid\">graph TD\n  A --&gt; B</pre>"),
+        html.contains("data-pele-url=\"/_docs/pele/1.6.0/lazy.js\">graph TD\n  A --&gt; B</pre>"),
         "{html}"
     );
     assert!(html.contains("window.__dkMermaidOnce=1"), "{html}");
+    assert!(!html.contains("cdn.jsdelivr.net"), "{html}");
+    assert!(!html.contains("mermaid@11"), "{html}");
     assert!(!html.contains("dk-code-block"), "{html}");
 }

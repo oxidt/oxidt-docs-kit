@@ -35,6 +35,8 @@
 //! ```
 //!
 //! Serve [`STYLESHEET`] at the `href` you link (see the `topcoat-docs` example).
+//! With `mermaid` enabled, register `Router::builder().route(diagram_assets)`
+//! to serve the bundled diagram modules from your own app.
 //!
 //! The blog (`blog_*_page` / `blog_*_head`) renders a `BlogRegistry` from
 //! `dioxus_docs_kit_build::BlogBuild`, with filters and pagination as plain
@@ -53,6 +55,8 @@
 
 mod blog;
 mod content;
+#[cfg(feature = "mermaid")]
+mod diagrams;
 mod icon;
 mod openapi;
 mod shell;
@@ -63,6 +67,8 @@ pub use blog::{
     blog_post_page, blog_search_page,
 };
 pub use content::doc_content;
+#[cfg(feature = "mermaid")]
+pub use diagrams::diagram_assets;
 pub use shell::{docs_head, docs_page, docs_search_head, docs_search_page};
 pub use theme::docs_theme_script;
 

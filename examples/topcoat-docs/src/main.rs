@@ -45,6 +45,7 @@ fn router() -> Router {
     Router::builder()
         .route(home)
         .route(stylesheet)
+        .route(topcoat_docs_kit::diagram_assets)
         .page(docs_index)
         .page(search)
         .page(docs)
