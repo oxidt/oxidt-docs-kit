@@ -1,6 +1,8 @@
 /* ── Oxidt tokens ──
    Ink on paper: near-black primary on white, inverted for dark. Colour is
-   reserved for status (info, success, warning, error).
+   reserved for status (info, success, warning, error) and for the rust
+   accent, which marks state only: focus rings, the active tab, checked
+   controls and selected text.
 
    The names follow daisyUI's (`base-100`, `primary-content`, `radius-box`…), so
    existing markup such as `bg-base-200` or `text-base-content/60` keeps
@@ -16,17 +18,17 @@
     --color-primary-content: #ffffff;
     --color-secondary: #404040;
     --color-secondary-content: #ffffff;
-    --color-accent: #737373;
+    --color-accent: #c2410c;
     --color-accent-content: #ffffff;
     --color-neutral: #171717;
     --color-neutral-content: #ffffff;
-    --color-info: #2563eb;
+    --color-info: #3563c9;
     --color-info-content: #ffffff;
-    --color-success: #16a34a;
+    --color-success: #217f48;
     --color-success-content: #ffffff;
-    --color-warning: #c47b1a;
+    --color-warning: #93620f;
     --color-warning-content: #ffffff;
-    --color-error: #dc2626;
+    --color-error: #c03d37;
     --color-error-content: #ffffff;
 
     --radius-box: 0.875rem;
@@ -50,24 +52,24 @@
     [data-theme="dark"] {
         color-scheme: dark;
         --color-base-100: #0a0a0a;
-        --color-base-200: #141414;
-        --color-base-300: #262626;
+        --color-base-200: #1a1a1a;
+        --color-base-300: #2e2e2e;
         --color-base-content: #ededed;
         --color-primary: #fafafa;
         --color-primary-content: #0a0a0a;
         --color-secondary: #a3a3a3;
         --color-secondary-content: #0a0a0a;
-        --color-accent: #d4d4d4;
-        --color-accent-content: #0a0a0a;
+        --color-accent: #fb923c;
+        --color-accent-content: #1c0a02;
         --color-neutral: #262626;
         --color-neutral-content: #ededed;
-        --color-info: #60a5fa;
+        --color-info: #7ea6e8;
         --color-info-content: #04121f;
-        --color-success: #4ade80;
+        --color-success: #6cc28f;
         --color-success-content: #052b16;
-        --color-warning: #e8b04a;
+        --color-warning: #d9ad5c;
         --color-warning-content: #2a1d05;
-        --color-error: #f87171;
+        --color-error: #e8837c;
         --color-error-content: #2a0a0a;
     }
 
@@ -75,24 +77,24 @@
         :root:not([data-theme]) {
             color-scheme: dark;
             --color-base-100: #0a0a0a;
-            --color-base-200: #141414;
-            --color-base-300: #262626;
+            --color-base-200: #1a1a1a;
+            --color-base-300: #2e2e2e;
             --color-base-content: #ededed;
             --color-primary: #fafafa;
             --color-primary-content: #0a0a0a;
             --color-secondary: #a3a3a3;
             --color-secondary-content: #0a0a0a;
-            --color-accent: #d4d4d4;
-            --color-accent-content: #0a0a0a;
+            --color-accent: #fb923c;
+            --color-accent-content: #1c0a02;
             --color-neutral: #262626;
             --color-neutral-content: #ededed;
-            --color-info: #60a5fa;
+            --color-info: #7ea6e8;
             --color-info-content: #04121f;
-            --color-success: #4ade80;
+            --color-success: #6cc28f;
             --color-success-content: #052b16;
-            --color-warning: #e8b04a;
+            --color-warning: #d9ad5c;
             --color-warning-content: #2a1d05;
-            --color-error: #f87171;
+            --color-error: #e8837c;
             --color-error-content: #2a0a0a;
         }
     }
@@ -102,6 +104,10 @@
         color: var(--color-base-content);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+        background-color: color-mix(in oklab, var(--color-accent) 28%, transparent);
     }
 
     h1,
@@ -114,5 +120,15 @@
     }
 }
 
-/* `dark:` follows the theme attribute, not only the OS setting. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+/* `dark:` follows the theme attribute, and the OS setting when no attribute
+   is set (the same rule the colour tokens use). */
+@custom-variant dark {
+    &:where([data-theme="dark"], [data-theme="dark"] *) {
+        @slot;
+    }
+    @media (prefers-color-scheme: dark) {
+        &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+            @slot;
+        }
+    }
+}

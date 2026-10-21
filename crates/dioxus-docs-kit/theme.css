@@ -18,14 +18,6 @@
  * anywhere inside `.dk-root`.
  */
 
-/* oxidt-ui's light success/warning (#16a34a, #c47b1a) sit near 3:1 on white,
-   too faint for TIP/WARNING labels and white-on-fill status badges. Tailwind's
-   700 shades clear 4.5:1 both ways. `:where()` keeps this below any preset. */
-:where(:root:not([data-theme="dark"])) {
-    --color-success: #15803d;
-    --color-warning: #a16207;
-}
-
 /* The full-viewport dialog element supplies the search backdrop itself. */
 .dk-search-backdrop::backdrop {
     background: transparent;
@@ -76,25 +68,26 @@
 
     /* -- syntax highlighting --
        One token per `hl_lite::Kind`, rendered as `.hl-<kind>` inside
-       `.dk-code`. Each is a `light-dark()` pair: GitHub Light on the left,
-       Tokyo Night on the right. The choice follows the element's
+       `.dk-code`. Each is a `light-dark()` pair: light on the left, dark
+       on the right: ink and greys, with one rust accent for keywords and
+       literals and muted olive for strings. The choice follows the element's
        `color-scheme`, which DaisyUI sets per theme — so these flip with the
        site's light/dark toggle without any JavaScript. Not using DaisyUI?
        Set `color-scheme: dark` on your root element, or just override the
        tokens with flat colors. */
-    --dk-hl-keyword:     light-dark(#cf222e, #bb9af7);
-    --dk-hl-string:      light-dark(#0a3069, #9ece6a);
-    --dk-hl-comment:     light-dark(#59636e, #7a82ad);
-    --dk-hl-number:      light-dark(#0550ae, #ff9e64);
-    --dk-hl-type:        light-dark(#953800, #2ac3de);
-    --dk-hl-function:    light-dark(#8250df, #7aa2f7);
-    --dk-hl-attribute:   light-dark(#0550ae, #e0af68);
-    --dk-hl-property:    light-dark(#953800, #7dcfff);
-    --dk-hl-tag:         light-dark(#116329, #f7768e);
-    --dk-hl-operator:    light-dark(#cf222e, #89ddff);
-    --dk-hl-punctuation: light-dark(#57606a, #9aa5ce);
-    --dk-hl-constant:    light-dark(#0550ae, #ff9e64);
-    --dk-hl-variable:    light-dark(#953800, #c0caf5);
+    --dk-hl-keyword:     light-dark(#9a3412, #f0a875);
+    --dk-hl-string:      light-dark(#4a6619, #b5c98f);
+    --dk-hl-comment:     light-dark(#6b6b6b, #8c8c8c);
+    --dk-hl-number:      light-dark(#9a3412, #f0a875);
+    --dk-hl-type:        light-dark(#262626, #e5e5e5);
+    --dk-hl-function:    light-dark(#0a0a0a, #fafafa);
+    --dk-hl-attribute:   light-dark(#404040, #c4c4c4);
+    --dk-hl-property:    light-dark(#404040, #c4c4c4);
+    --dk-hl-tag:         light-dark(#9a3412, #f0a875);
+    --dk-hl-operator:    light-dark(#6b6b6b, #9a9a9a);
+    --dk-hl-punctuation: light-dark(#6b6b6b, #9a9a9a);
+    --dk-hl-constant:    light-dark(#9a3412, #f0a875);
+    --dk-hl-variable:    light-dark(#404040, #c4c4c4);
 }
 
 /* -------------------------------------------------------------------------- */

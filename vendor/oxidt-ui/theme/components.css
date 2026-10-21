@@ -58,8 +58,7 @@
         }
 
         &:focus-visible {
-            outline: 2px solid
-                var(--btn-color, var(--color-base-content));
+            outline: 2px solid var(--color-accent);
         }
 
         &:active:not(:disabled, [disabled], .btn-disabled) {
@@ -403,7 +402,7 @@
         }
 
         &:is(:focus, :focus-within) {
-            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline: 2px solid var(--field-ring, var(--color-accent));
             outline-offset: 2px;
             border-color: var(--field-ring, var(--color-base-content));
         }
@@ -450,7 +449,7 @@
         appearance: none;
 
         &:focus {
-            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline: 2px solid var(--field-ring, var(--color-accent));
             outline-offset: 2px;
             border-color: var(--field-ring, var(--color-base-content));
         }
@@ -480,7 +479,7 @@
         }
 
         &:focus {
-            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline: 2px solid var(--field-ring, var(--color-accent));
             outline-offset: 2px;
             border-color: var(--field-ring, var(--color-base-content));
         }
@@ -589,10 +588,12 @@
             background-color 0.15s ease,
             border-color 0.15s ease;
 
+        /* Sized from the box, not in %: the grid track shrinks to its content,
+           so a percentage resolves to zero and the tick disappears. */
         &::before {
             content: "";
-            width: 75%;
-            height: 75%;
+            width: calc(var(--check-size, 1.5rem) * 0.75);
+            height: calc(var(--check-size, 1.5rem) * 0.75);
             background-color: var(--check-content, var(--color-base-content));
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
                 center / contain no-repeat;
@@ -603,20 +604,22 @@
                 scale 0.15s ease;
         }
 
-        /* Unchecked and checked share the border; only a colour modifier
-           fills the box, as in daisyUI. */
+        /* Checked fills the box with the accent, or with a colour modifier's
+           colour. */
         &:checked,
         &[aria-checked="true"] {
-            background-color: var(--check-color, transparent);
+            border-color: var(--check-color, var(--color-accent));
+            background-color: var(--check-color, var(--color-accent));
 
             &::before {
+                background-color: var(--check-content, var(--color-accent-content));
                 opacity: 1;
                 scale: 1;
             }
         }
 
         &:focus-visible {
-            outline: 2px solid var(--check-color, var(--color-base-content));
+            outline: 2px solid var(--color-accent);
             outline-offset: 2px;
         }
 
@@ -646,14 +649,14 @@
 
         &:checked,
         &[aria-checked="true"] {
-            border-color: var(--check-color, var(--color-base-content));
-            background-color: var(--check-color, var(--color-base-content));
+            border-color: var(--check-color, var(--color-accent));
+            background-color: var(--check-color, var(--color-accent));
             box-shadow: inset 0 0 0 calc(var(--check-size, 1.5rem) * 0.22)
                 var(--color-base-100);
         }
 
         &:focus-visible {
-            outline: 2px solid var(--check-color, var(--color-base-content));
+            outline: 2px solid var(--color-accent);
             outline-offset: 2px;
         }
 
@@ -698,7 +701,7 @@
         &:checked,
         &[aria-checked="true"] {
             background-color: var(--color-base-100);
-            color: var(--check-color, var(--color-base-content));
+            color: var(--check-color, var(--color-accent));
 
             &::before {
                 translate: calc(var(--toggle-h, 1.5rem) - 2px - var(--toggle-p) * 2) 0;
@@ -710,7 +713,7 @@
         }
 
         &:focus-visible {
-            outline: 2px solid currentColor;
+            outline: 2px solid var(--color-accent);
             outline-offset: 2px;
         }
 
@@ -1052,7 +1055,7 @@
         transition: background-color 0.2s ease;
     }
     & > .tab:is(.tab-active, [aria-selected="true"], [aria-current="page"], :checked)::before {
-        background-color: var(--color-base-content);
+        background-color: var(--color-accent);
     }
 }
 @utility tabs-box {
@@ -1960,7 +1963,7 @@
         cursor: pointer;
 
         &:focus-visible {
-            outline: 2px solid currentColor;
+            outline: 2px solid var(--color-accent);
             outline-offset: 2px;
         }
     }

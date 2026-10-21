@@ -16,6 +16,11 @@ apply to all six crates (`dioxus-docs-kit`, `dioxus-docs-kit-build`,
   `data-theme` attribute the kit now follows the OS colour scheme instead of
   defaulting to dark; set `data-theme="dark"` on `<html>` to keep the old
   default. MDX cards use a white surface with a border.
+- **Calmer code and a rust accent.** Syntax highlighting uses ink and greys
+  with one rust accent for keywords and literals and muted olive for strings,
+  instead of GitHub Light / Tokyo Night. From oxidt-ui 0.1.3, focus rings, the
+  active tab and checked controls use the rust accent; the light status
+  colours now clear 4.5:1, so the kit's own success/warning override is gone.
 - **Project renamed to oxidt-docs-kit.** The site, README and docs now use the
   new name. Published crate names (`dioxus-docs-kit`, `dioxus-docs-kit-build`,
   `dioxus-mdx`, `hl-lite`) are unchanged.

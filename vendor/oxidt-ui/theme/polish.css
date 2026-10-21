@@ -1,6 +1,8 @@
 /* ── Oxidt polish ──
-   The look on top of the components: elevation, glass, shell chrome and
-   motion. Taken from oxidt-cloud's teams-topcoat styling. */
+   The look on top of the components: surfaces, shell chrome and motion.
+   Effects stay functional: only links and buttons react to hover, blur only
+   sits behind content that scrolls or overlays. Theme-specific values use
+   `light-dark()`, so they follow both `data-theme` and the OS setting. */
 
 /* ── Base ── */
 
@@ -11,7 +13,9 @@
 
     a,
     button {
-        transition: all 0.15s ease;
+        transition-property: color, background-color, border-color, opacity;
+        transition-duration: 0.15s;
+        transition-timing-function: ease;
     }
 }
 
@@ -21,93 +25,37 @@
 }
 
 /* ── Cards ──
-   `card-elevated` is the resting surface; anchor and button cards lift on
-   hover, static cards opt in with `card-hover`. */
+   `card-elevated` is the resting surface, a step above the page in dark.
+   Anchor and button cards answer hover with a firmer border and a soft
+   shadow; static cards opt in with `card-hover`. */
 
 @utility card {
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
-
-    &:hover .badge {
-        transform: scale(1.05);
-    }
-
-    &:hover .icon-animate {
-        transform: rotate(-5deg) scale(1.1);
-        transition: transform 0.2s ease;
-    }
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
 
     :where(a, button)&:hover {
-        transform: translateY(-3px);
-        border-color: #dcdcdc;
-        box-shadow:
-            0 1px 2px rgb(0 0 0 / 0.04),
-            0 12px 32px -8px rgb(0 0 0 / 0.1);
-    }
-
-    [data-theme="dark"] :where(a, button)&:hover {
-        border-color: #3a3a3a;
-        box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
-    }
-
-    [data-theme="dark"] &:where(.bg-base-200) {
-        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
-    }
-
-    :where(a, button)&:active {
-        transform: translateY(-1px);
-        transition-duration: 0.1s;
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-        :where(a, button)&:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        :where(a, button)&:active {
-            transform: scale(0.98);
-        }
+        border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+        box-shadow: 0 4px 16px -6px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.5));
     }
 }
 
 @utility card-hover {
     &:hover {
-        transform: translateY(-3px);
-        border-color: #dcdcdc;
-        box-shadow:
-            0 1px 2px rgb(0 0 0 / 0.04),
-            0 12px 32px -8px rgb(0 0 0 / 0.1);
-    }
-
-    [data-theme="dark"] &:hover {
-        border-color: #3a3a3a;
-        box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
-    }
-
-    &:active {
-        transform: translateY(-1px);
-        transition-duration: 0.1s;
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-        &:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        &:active {
-            transform: scale(0.98);
-        }
+        border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+        box-shadow: 0 4px 16px -6px light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.5));
     }
 }
 
 @utility card-elevated {
     border: 1px solid var(--color-base-300);
     border-radius: var(--radius-box);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    box-shadow: 0 1px 2px light-dark(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.3));
+    /* An overlay, so it lifts whatever `bg-*` the card sets. */
+    background-image: linear-gradient(
+        light-dark(transparent, rgb(255 255 255 / 0.03)),
+        light-dark(transparent, rgb(255 255 255 / 0.03))
+    );
 }
 
 /* ── Buttons ── */
@@ -140,8 +88,7 @@
     }
 
     & .drawer-side > aside {
-        background: color-mix(in srgb, var(--color-base-200) 95%, transparent);
-        backdrop-filter: blur(8px);
+        background: var(--color-base-200);
     }
 }
 
@@ -172,8 +119,8 @@
 
 @utility modal-polished {
     border-radius: 1rem;
-    border: 1px solid color-mix(in srgb, var(--color-base-300) 70%, transparent);
-    box-shadow: 0 20px 60px rgb(0 0 0 / 0.4);
+    border: 1px solid var(--color-base-300);
+    box-shadow: 0 16px 48px -12px light-dark(rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.6));
 }
 
 @utility modal-backdrop {
@@ -196,14 +143,11 @@
         position: sticky;
         top: 0;
         z-index: 1;
-        background: color-mix(in srgb, var(--color-base-200) 96%, transparent);
-        backdrop-filter: blur(6px);
+        background: var(--color-base-200);
     }
 
     & tbody tr {
-        transition:
-            background 160ms ease,
-            box-shadow 160ms ease;
+        transition: background-color 0.15s ease;
     }
 
     & tbody tr:hover {
@@ -221,7 +165,7 @@
 
 /* ── Auth pages ──
    Hooks for oxidt-auth's LocalLoginPage and other standalone forms: a dotted
-   backdrop and a glass card. */
+   backdrop and a solid card. */
 
 @utility auth-bg {
     background:
@@ -234,10 +178,9 @@
 }
 
 @utility auth-card {
-    background: color-mix(in oklab, var(--color-base-200) 60%, transparent);
-    backdrop-filter: blur(24px);
-    border: 1px solid color-mix(in oklab, var(--color-base-300) 50%, transparent);
-    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    background: var(--color-base-100);
+    border: 1px solid var(--color-base-300);
+    box-shadow: 0 16px 48px -16px light-dark(rgb(0 0 0 / 0.18), rgb(0 0 0 / 0.6));
 }
 
 /* ── Motion ── */
@@ -245,7 +188,7 @@
 @keyframes fade-up {
     from {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(4px);
     }
     to {
         opacity: 1;
@@ -285,7 +228,7 @@
 }
 
 @utility animate-fade-up {
-    animation: fade-up 0.4s ease-out both;
+    animation: fade-up 0.25s ease-out both;
 
     @media (prefers-reduced-motion: reduce) {
         animation: none;
