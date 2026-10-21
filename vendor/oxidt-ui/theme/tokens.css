@@ -44,9 +44,34 @@
 }
 
 @layer base {
-    :root,
+    :root {
+        color-scheme: light;
+    }
+
+    /* The light values again, so a light section inside a dark page (or an
+       OS-dark root) does not inherit the dark ones. */
     [data-theme="light"] {
         color-scheme: light;
+        --color-base-100: #ffffff;
+        --color-base-200: #f7f7f7;
+        --color-base-300: #ebebeb;
+        --color-base-content: #0a0a0a;
+        --color-primary: #0a0a0a;
+        --color-primary-content: #ffffff;
+        --color-secondary: #404040;
+        --color-secondary-content: #ffffff;
+        --color-accent: #c2410c;
+        --color-accent-content: #ffffff;
+        --color-neutral: #171717;
+        --color-neutral-content: #ffffff;
+        --color-info: #3563c9;
+        --color-info-content: #ffffff;
+        --color-success: #217f48;
+        --color-success-content: #ffffff;
+        --color-warning: #93620f;
+        --color-warning-content: #ffffff;
+        --color-error: #c03d37;
+        --color-error-content: #ffffff;
     }
 
     [data-theme="dark"] {
@@ -121,13 +146,18 @@
 }
 
 /* `dark:` follows the theme attribute, and the OS setting when no attribute
-   is set (the same rule the colour tokens use). */
+   is set (the same rule the colour tokens use). It stops at a light section
+   nested inside the dark area. */
 @custom-variant dark {
-    &:where([data-theme="dark"], [data-theme="dark"] *) {
+    &:where([data-theme="dark"], [data-theme="dark"] *):not(
+            :where([data-theme="dark"] [data-theme="light"], [data-theme="dark"] [data-theme="light"] *)
+        ) {
         @slot;
     }
     @media (prefers-color-scheme: dark) {
-        &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+        &:where(:root:not([data-theme]), :root:not([data-theme]) *):not(
+                :where([data-theme="light"], [data-theme="light"] *)
+            ) {
             @slot;
         }
     }
