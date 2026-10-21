@@ -197,32 +197,6 @@ fn App() -> Element {
         });
     });
 
-    // Sync DaisyUI's data-theme to whichever preset is active.
-    // Non-default presets lock the mode (currently both ship as light themes).
-    // Default presets defer to the user's manual ThemeToggle choice in localStorage.
-    use_effect(move || {
-        let mode = preset_mode(&preset());
-        spawn(async move {
-            match mode {
-                Some(forced) => {
-                    let _ = document::eval(&format!(
-                        "document.documentElement.setAttribute('data-theme', '{forced}');"
-                    ));
-                }
-                None => {
-                    let _ = document::eval(&format!(
-                        r#"
-                        try {{
-                            let t = localStorage.getItem('{DAISY_THEME_STORAGE_KEY}') || 'dark';
-                            document.documentElement.setAttribute('data-theme', t);
-                        }} catch(e) {{}}
-                        "#
-                    ));
-                }
-            }
-        });
-    });
-
     let css = preset_css(&preset());
 
     rsx! {
@@ -304,6 +278,36 @@ fn ThemePresetPicker() -> Element {
 #[component]
 fn ThemeControl(toggle: Element) -> Element {
     let CurrentPreset(preset) = use_context::<CurrentPreset>();
+
+    // Sync DaisyUI's data-theme to whichever preset is active. Lives here,
+    // not in `App`, because every navbar renders this: each layout remount
+    // re-runs the kit's `use_theme_provider`, which reapplies the stored
+    // toggle value, and this effect has to run after it to keep the lock.
+    // Non-default presets lock the mode (currently both ship as light themes).
+    // Default presets defer to the user's manual ThemeToggle choice in localStorage.
+    use_effect(move || {
+        let mode = preset_mode(&preset());
+        spawn(async move {
+            match mode {
+                Some(forced) => {
+                    let _ = document::eval(&format!(
+                        "document.documentElement.setAttribute('data-theme', '{forced}');"
+                    ));
+                }
+                None => {
+                    let _ = document::eval(&format!(
+                        r#"
+                        try {{
+                            let t = localStorage.getItem('{DAISY_THEME_STORAGE_KEY}') || 'dark';
+                            document.documentElement.setAttribute('data-theme', t);
+                        }} catch(e) {{}}
+                        "#
+                    ));
+                }
+            }
+        });
+    });
+
     match preset_mode(&preset()) {
         None => toggle,
         Some(mode) => rsx! {
