@@ -344,12 +344,18 @@ fn SiteNavbar(
             "btn btn-ghost btn-sm rounded-lg font-medium"
         }
     };
-    // Without a drawer there is no mobile fallback, so keep the menu visible.
-    let menu_class = if drawer_open.is_some() {
-        "menu menu-horizontal gap-1 hidden lg:flex"
-    } else {
-        "menu menu-horizontal gap-1"
-    };
+    let links = [
+        (Route::Home {}, NavSection::Home, "Home"),
+        (Route::BlogIndex {}, NavSection::Blog, "Blog"),
+        (
+            Route::DocsPage {
+                slug: vec!["getting-started".into(), "introduction".into()],
+            },
+            NavSection::Docs,
+            "Docs",
+        ),
+        (Route::SkillsIndexPage {}, NavSection::Skills, "Skills"),
+    ];
 
     rsx! {
         div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
@@ -371,22 +377,37 @@ fn SiteNavbar(
                 }
             }
             div { class: "flex-none flex items-center gap-1",
-                ul { class: "{menu_class}",
-                    li {
-                        Link { to: Route::Home {}, class: link_class(NavSection::Home), "Home" }
-                    }
-                    li {
-                        Link { to: Route::BlogIndex {}, class: link_class(NavSection::Blog), "Blog" }
-                    }
-                    li {
-                        Link {
-                            to: Route::DocsPage { slug: vec!["getting-started".into(), "introduction".into()] },
-                            class: link_class(NavSection::Docs),
-                            "Docs"
+                ul { class: "menu menu-horizontal gap-1 hidden lg:flex",
+                    for (to, active, label) in links.clone() {
+                        li {
+                            Link { to, class: link_class(active), "{label}" }
                         }
                     }
-                    li {
-                        Link { to: Route::SkillsIndexPage {}, class: link_class(NavSection::Skills), "Skills" }
+                }
+                // Pages without a drawer get the links as a dropdown instead,
+                // or they crowd the brand off a phone-width header.
+                if drawer_open.is_none() {
+                    div { class: "dropdown dropdown-end lg:hidden",
+                        div {
+                            tabindex: "0",
+                            role: "button",
+                            class: "btn btn-ghost btn-sm btn-square rounded-lg",
+                            "aria-label": "Open navigation",
+                            Icon { class: "size-5", icon: LdMenu }
+                        }
+                        ul {
+                            tabindex: "0",
+                            class: "dropdown-content z-[60] menu p-2 shadow-lg bg-base-200 border border-base-300 rounded-lg w-44 mt-2",
+                            for (to, active, label) in links {
+                                li {
+                                    Link {
+                                        to,
+                                        class: if section == active { "active font-medium" } else { "" },
+                                        "{label}"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 SearchButton { search_open }
@@ -922,7 +943,7 @@ fn CodeSection() -> Element {
                             div { class: "flex-1 min-w-0",
                                 p { class: "text-sm font-medium text-base-content",
                                     "Claude handles the rest "
-                                    span { class: "text-base-content/40", "— dependencies, build.rs, routes, layout, Tailwind safelist, and starter content" }
+                                    span { class: "text-base-content/60", "— dependencies, build.rs, routes, layout, Tailwind safelist, and starter content" }
                                 }
                             }
                         }
@@ -949,7 +970,7 @@ fn CodeSection() -> Element {
 fn LandingFooter() -> Element {
     rsx! {
         footer { class: "border-t border-base-300 px-4 py-8",
-            div { class: "max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-base-content/50",
+            div { class: "max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-base-content/60",
                 span { "Oxidt Docs Kit · Built with Dioxus" }
                 a {
                     href: "https://github.com/oxidt/oxidt-docs-kit",

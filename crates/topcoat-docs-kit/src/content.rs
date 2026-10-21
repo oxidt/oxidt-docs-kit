@@ -133,7 +133,7 @@ async fn card_grid(cards: &[CardNode], cols: u8, base_path: &str) -> Result<impl
 #[component]
 async fn card_item(card: &CardNode, base_path: &str) -> Result<impl View> {
     let body = view! {
-        <div class="bg-base-300 hover:border-primary/50 transition-colors duration-150 border border-base-content/10 rounded-lg h-full">
+        <div class="not-prose bg-base-300 hover:border-primary/50 transition-colors duration-150 border border-base-content/10 rounded-lg h-full">
             <div class="p-6">
                 if let Some(name) = &card.icon {
                     <div class="text-primary mb-5">icon(glyph: icon_for_name(name), class: "size-6")</div>
@@ -339,7 +339,7 @@ async fn update_entry(update: &UpdateNode, base_path: &str, key: &str) -> Result
             <div class="flex flex-col items-start gap-1.5">
                 <span id=(slugify(&update.label)) class="badge badge-primary font-mono h-auto whitespace-nowrap py-1">(update.label.as_str())</span>
                 if !update.description.is_empty() {
-                    <span class="text-xs text-base-content/50">(update.description.as_str())</span>
+                    <span class="text-xs text-base-content/60">(update.description.as_str())</span>
                 }
             </div>
             <div class="prose prose-sm max-w-none">
@@ -382,7 +382,7 @@ async fn mermaid_diagram(code: &str) -> Result<impl View> {
 async fn code_block(block: &CodeBlockNode) -> Result<impl View> {
     let label = block.filename.as_deref().or(block.language.as_deref());
     Ok(view! {
-        <div class="dk-code-block not-prose my-6 relative group inline-block max-w-full rounded-lg border border-base-content/10 overflow-hidden">
+        <div class="dk-code-block not-prose my-6 relative group w-fit max-w-full rounded-lg border border-base-content/10 overflow-hidden">
             match label {
                 Some(label) => {
                     <div class="flex items-center justify-between bg-base-200/80 px-4 py-2.5 border-b border-base-content/10 text-sm">

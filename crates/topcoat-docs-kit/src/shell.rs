@@ -155,7 +155,7 @@ async fn search_results(
                 } else {
                     <p class="text-base-content/70 mb-8">(summary) " \u{201c}" (query) "\u{201d}"</p>
                     if hits.is_empty() {
-                        <p class="text-base-content/50">"No pages match. Try fewer or different words."</p>
+                        <p class="text-base-content/60">"No pages match. Try fewer or different words."</p>
                     }
                     <ul class="dk-search-results divide-y divide-base-300">
                         for hit in &hits {
@@ -166,13 +166,13 @@ async fn search_results(
                                             <span class=(format!("badge badge-xs font-mono font-bold {} shrink-0", method.badge_class()))>(method.as_str())</span>
                                         }
                                         if let Some(context) = &hit.context {
-                                            <span class="dk-search-context text-sm text-base-content/50 truncate shrink-0">(context.as_str())</span>
+                                            <span class="dk-search-context text-sm text-base-content/60 truncate shrink-0">(context.as_str())</span>
                                             <span class="text-sm text-base-content/30 shrink-0">"\u{203a}"</span>
                                         }
                                         <span class="font-medium truncate group-hover:text-primary transition-colors">(hit.title.as_str())</span>
                                     </div>
                                     if !hit.breadcrumb.is_empty() {
-                                        <div class="text-xs text-base-content/50 mt-0.5">(hit.breadcrumb.as_str())</div>
+                                        <div class="text-xs text-base-content/60 mt-0.5">(hit.breadcrumb.as_str())</div>
                                     }
                                     if !hit.snippet.is_empty() {
                                         <p class="dk-search-snippet text-sm text-base-content/70 mt-1.5">
@@ -327,7 +327,7 @@ async fn page_nav(
             <div class="flex-1">
                 if let Some(prev) = prev {
                     <a href=(format!("{base_path}/{prev}")) class="dk-page-prev group flex flex-col p-4 rounded-lg border border-base-300 hover:border-primary/50 hover:bg-base-200/50 transition-all">
-                        <span class="text-xs text-base-content/50 mb-1">"Previous"</span>
+                        <span class="text-xs text-base-content/60 mb-1">"Previous"</span>
                         <span class="font-medium group-hover:text-primary transition-colors">(title(prev))</span>
                     </a>
                 }
@@ -335,7 +335,7 @@ async fn page_nav(
             <div class="flex-1 text-right">
                 if let Some(next) = next {
                     <a href=(format!("{base_path}/{next}")) class="dk-page-next group flex flex-col p-4 rounded-lg border border-base-300 hover:border-primary/50 hover:bg-base-200/50 transition-all items-end">
-                        <span class="text-xs text-base-content/50 mb-1">"Next"</span>
+                        <span class="text-xs text-base-content/60 mb-1">"Next"</span>
                         <span class="font-medium group-hover:text-primary transition-colors">(title(next))</span>
                     </a>
                 }

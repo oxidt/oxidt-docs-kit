@@ -18,6 +18,14 @@
  * anywhere inside `.dk-root`.
  */
 
+/* oxidt-ui's light success/warning (#16a34a, #c47b1a) sit near 3:1 on white,
+   too faint for TIP/WARNING labels and white-on-fill status badges. Tailwind's
+   700 shades clear 4.5:1 both ways. `:where()` keeps this below any preset. */
+:where(:root:not([data-theme="dark"])) {
+    --color-success: #15803d;
+    --color-warning: #a16207;
+}
+
 /* The full-viewport dialog element supplies the search backdrop itself. */
 .dk-search-backdrop::backdrop {
     background: transparent;

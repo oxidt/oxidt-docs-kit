@@ -194,11 +194,11 @@ pub(crate) fn SearchModalShell(
                     role: "listbox",
                     aria_label: "Search results",
                     if query().trim().is_empty() {
-                        div { class: "px-4 py-8 text-center text-base-content/50 text-sm",
+                        div { class: "px-4 py-8 text-center text-base-content/60 text-sm",
                             "Type to search..."
                         }
                     } else if results.read().is_empty() {
-                        div { class: "px-4 py-8 text-center text-base-content/50 text-sm",
+                        div { class: "px-4 py-8 text-center text-base-content/60 text-sm",
                             "No results for \"{query}\""
                         }
                     } else {
@@ -215,7 +215,7 @@ pub(crate) fn SearchModalShell(
                 }
 
                 // Footer
-                div { class: "px-4 py-2 border-t border-base-300 text-xs text-base-content/40 flex justify-between",
+                div { class: "px-4 py-2 border-t border-base-300 text-xs text-base-content/60 flex justify-between",
                     span { "Esc to close" }
                     span { "↑↓ to select · Enter to navigate" }
                 }
@@ -254,7 +254,7 @@ fn SearchResultRow(
                         span { class: "badge badge-xs font-mono {badge_class}", "{label}" }
                     }
                     if let Some(context) = hit.context.as_ref() {
-                        span { class: "dk-search-context text-xs text-base-content/50 truncate shrink-0",
+                        span { class: "dk-search-context text-xs text-base-content/60 truncate shrink-0",
                             "{context}"
                         }
                         span { class: "text-xs text-base-content/30 shrink-0", "›" }
@@ -262,7 +262,7 @@ fn SearchResultRow(
                     span { class: "font-medium text-sm truncate", "{hit.title}" }
                 }
                 div { class: "flex items-center gap-2 mt-0.5",
-                    span { class: "text-xs text-base-content/50 truncate", "{hit.meta}" }
+                    span { class: "text-xs text-base-content/60 truncate", "{hit.meta}" }
                     for tag in hit.tags.iter() {
                         span { class: "badge badge-xs badge-outline badge-primary", "{tag}" }
                     }

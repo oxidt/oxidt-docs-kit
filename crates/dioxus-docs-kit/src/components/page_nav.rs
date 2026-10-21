@@ -27,7 +27,7 @@ pub fn DocsPageNav(current_path: String) -> Element {
                             Link {
                                 to: NavigationTarget::Internal(href),
                                 class: "dk-page-prev group flex flex-col p-4 rounded-lg border border-base-300 hover:border-primary/50 hover:bg-base-200/50 transition-all",
-                                span { class: "text-xs text-base-content/50 mb-1", "Previous" }
+                                span { class: "text-xs text-base-content/60 mb-1", "Previous" }
                                 span { class: "font-medium group-hover:text-primary transition-colors",
                                     "{title}"
                                 }
@@ -47,7 +47,7 @@ pub fn DocsPageNav(current_path: String) -> Element {
                             Link {
                                 to: NavigationTarget::Internal(href),
                                 class: "dk-page-next group flex flex-col p-4 rounded-lg border border-base-300 hover:border-primary/50 hover:bg-base-200/50 transition-all items-end",
-                                span { class: "text-xs text-base-content/50 mb-1", "Next" }
+                                span { class: "text-xs text-base-content/60 mb-1", "Next" }
                                 span { class: "font-medium group-hover:text-primary transition-colors",
                                     "{title}"
                                 }

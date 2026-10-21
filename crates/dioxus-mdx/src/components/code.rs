@@ -37,7 +37,7 @@ pub fn DocCodeBlock(props: DocCodeBlockProps) -> Element {
         // `prose-code:*` / `prose-pre:*` utilities otherwise target the inner
         // `<pre class="dk-code"><code>`, painting the inline-code pill background
         // as a box behind every wrapped line.
-        div { class: "dk-code-block not-prose my-6 relative group inline-block max-w-full rounded-lg border border-base-content/10 overflow-hidden",
+        div { class: "dk-code-block not-prose my-6 relative group w-fit max-w-full rounded-lg border border-base-content/10 overflow-hidden",
             // Language label and filename - refined header
             if props.block.language.is_some() || props.block.filename.is_some() {
                 div { class: "flex items-center justify-between bg-base-200/80 px-4 py-2.5 border-b border-base-content/10 text-sm",
@@ -95,7 +95,7 @@ pub fn DocCodeGroup(props: DocCodeGroupProps) -> Element {
     let mut active_tab = use_signal(|| 0usize);
 
     rsx! {
-        div { class: "dk-code-block not-prose my-6 inline-block max-w-full rounded-lg border border-base-content/10 overflow-hidden",
+        div { class: "dk-code-block not-prose my-6 w-fit max-w-full rounded-lg border border-base-content/10 overflow-hidden",
             // Tab headers - refined styling with subtle shadows
             div { class: "flex items-center bg-base-200/80 border-b border-base-content/10",
                 for (i, block) in props.group.blocks.iter().enumerate() {
