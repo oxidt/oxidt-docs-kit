@@ -29,7 +29,7 @@ dioxus-docs-kit-build = { version = "0.10.2", path = "crates/dioxus-docs-kit-bui
 hl-lite = { version = "0.10.2", path = "crates/hl-lite" }
 serde = { version = "1.0", features = ["derive"] }
 schemars = "1"
-webmcp-rs = { version = "0.1", default-features = false, features = ["schema", "dioxus"] }
+webmcp-rs = { version = "0.2", default-features = false, features = ["schema", "dioxus"] }
 serde_json = "1.0"
 serde_yaml = "0.9"
 tracing = "0.1"

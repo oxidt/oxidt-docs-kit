@@ -83,6 +83,8 @@ pub fn DocsWebMcp() -> Element {
     use_tool(move || {
         let urls = search_urls.clone();
         Tool::new("docs_search")
+            .title("Search docs")
+            .read_only()
             .description(
                 "Search this documentation site. Returns ranked section-level matches \
                  with a text snippet and the URL of each. Prefer this over reading the \
@@ -124,6 +126,8 @@ pub fn DocsWebMcp() -> Element {
     use_tool(move || {
         let urls = doc_urls.clone();
         Tool::new("docs_get_page")
+            .title("Read docs page")
+            .read_only()
             .description(
                 "Read one documentation page as its original Markdown source, which is \
                  shorter and cleaner than the rendered page. Use docs_search or \
@@ -152,6 +156,8 @@ pub fn DocsWebMcp() -> Element {
     use_tool(move || {
         let urls = list_urls.clone();
         Tool::new("docs_list_pages")
+            .title("List docs pages")
+            .read_only()
             .description(
                 "List every page on this documentation site, grouped the way the sidebar \
                  groups them. Use it to find the exact path for docs_get_page, or to see \
@@ -170,6 +176,8 @@ pub fn DocsWebMcp() -> Element {
     use_tool(move || {
         let urls = api_urls.clone();
         Tool::new("docs_get_api_operation")
+            .title("Get API endpoint")
+            .read_only()
             .description(
                 "Get one API reference endpoint as structured data: HTTP method, URL, \
                  parameters with their types, request body, response codes and a ready \

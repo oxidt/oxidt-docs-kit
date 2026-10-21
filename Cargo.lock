@@ -4499,9 +4499,9 @@ dependencies = [
 
 [[package]]
 name = "webmcp-rs"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64e9e1e1c3b2c0e6197414458185b52a4daf32475ea950771e7ac64c7a766d52"
+checksum = "468112ef3a8c944e0c1d19c79600ac0a08881d8f8da76c4c6462819ac446ede2"
 dependencies = [
  "dioxus",
  "js-sys",
