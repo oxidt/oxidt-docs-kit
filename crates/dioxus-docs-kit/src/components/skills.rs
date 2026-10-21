@@ -95,7 +95,7 @@ fn SkillsSidebar() -> Element {
                                 Link {
                                     to: NavigationTarget::Internal(format!("{}/{}", ctx.base_path, skill.slug)),
                                     class: if current == skill.slug {
-                                        "dk-nav-item block px-3 py-2 text-sm rounded-lg transition-colors dk-nav-item-active bg-primary/10 text-primary font-medium border-l-2 border-primary"
+                                        "dk-nav-item block px-3 py-2 text-sm rounded-lg transition-colors dk-nav-item-active bg-primary/10 text-primary font-medium"
                                     } else {
                                         "dk-nav-item block px-3 py-2 text-sm rounded-lg transition-colors text-base-content/70 hover:text-base-content hover:bg-base-200"
                                     },

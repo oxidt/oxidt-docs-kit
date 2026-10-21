@@ -91,7 +91,7 @@ fn ApiSidebarLink(prefix: String, slug: String, title: String, method: HttpMetho
     let is_active = (ctx.current_path)() == path;
 
     let active_class = if is_active {
-        "dk-nav-item-active bg-primary/10 text-primary font-medium border-l-2 border-primary"
+        "dk-nav-item-active bg-primary/10 text-primary font-medium"
     } else {
         "text-base-content/70 hover:text-base-content hover:bg-base-200"
     };
@@ -136,7 +136,7 @@ fn SidebarLink(path: String) -> Element {
     let is_active = current == path || (current.is_empty() && path == registry.default_path);
 
     let active_class = if is_active {
-        "dk-nav-item-active bg-primary/10 text-primary font-medium border-l-2 border-primary"
+        "dk-nav-item-active bg-primary/10 text-primary font-medium"
     } else {
         "text-base-content/70 hover:text-base-content hover:bg-base-200"
     };

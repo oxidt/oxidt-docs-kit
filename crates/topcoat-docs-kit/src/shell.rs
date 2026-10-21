@@ -259,7 +259,7 @@ async fn sidebar(
 
 fn nav_state(active: bool) -> &'static str {
     if active {
-        "dk-nav-item-active bg-primary/10 text-primary font-medium border-l-2 border-primary"
+        "dk-nav-item-active bg-primary/10 text-primary font-medium"
     } else {
         "text-base-content/70 hover:text-base-content hover:bg-base-200"
     }

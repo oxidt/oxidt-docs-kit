@@ -17,28 +17,18 @@ pub struct DocCalloutProps {
 /// Callout box component styled with DaisyUI alerts.
 #[component]
 pub fn DocCallout(props: DocCalloutProps) -> Element {
-    let (bg_class, border_class, icon_class, shadow_class) = match props.callout_type {
-        CalloutType::Tip => (
-            "bg-success/5",
-            "border-success/40",
-            "text-success",
-            "shadow-success/5",
-        ),
-        CalloutType::Note => ("bg-info/5", "border-info/40", "text-info", "shadow-info/5"),
-        CalloutType::Warning => (
-            "bg-warning/5",
-            "border-warning/40",
-            "text-warning",
-            "shadow-warning/5",
-        ),
-        CalloutType::Info => ("bg-info/5", "border-info/40", "text-info", "shadow-info/5"),
+    let (bg_class, icon_class, shadow_class) = match props.callout_type {
+        CalloutType::Tip => ("bg-success/5", "text-success", "shadow-success/5"),
+        CalloutType::Note => ("bg-info/5", "text-info", "shadow-info/5"),
+        CalloutType::Warning => ("bg-warning/5", "text-warning", "shadow-warning/5"),
+        CalloutType::Info => ("bg-info/5", "text-info", "shadow-info/5"),
     };
 
     let html = props.content_html.clone();
 
     rsx! {
         div {
-            class: "my-6 px-4 py-4 rounded-lg border-l-4 {bg_class} {border_class} shadow-sm {shadow_class}",
+            class: "my-6 px-4 py-4 rounded-lg {bg_class} shadow-sm {shadow_class}",
             role: "alert",
             div { class: "flex gap-4",
                 // Icon - slightly larger

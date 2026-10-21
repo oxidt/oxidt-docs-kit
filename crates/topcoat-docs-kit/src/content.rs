@@ -86,15 +86,9 @@ async fn doc_node(node: &DocNode, base_path: &str, key: &str) -> Result<BoxView<
 #[component]
 async fn callout_box(callout: &CalloutNode) -> Result<impl View> {
     let (tone, glyph) = match callout.callout_type {
-        CalloutType::Tip => (
-            "bg-success/5 border-success/40 shadow-success/5",
-            LdLightbulb,
-        ),
-        CalloutType::Warning => (
-            "bg-warning/5 border-warning/40 shadow-warning/5",
-            LdTriangleAlert,
-        ),
-        _ => ("bg-info/5 border-info/40 shadow-info/5", LdInfo),
+        CalloutType::Tip => ("bg-success/5 shadow-success/5", LdLightbulb),
+        CalloutType::Warning => ("bg-warning/5 shadow-warning/5", LdTriangleAlert),
+        _ => ("bg-info/5 shadow-info/5", LdInfo),
     };
     let text = match callout.callout_type {
         CalloutType::Tip => "text-success",
@@ -102,7 +96,7 @@ async fn callout_box(callout: &CalloutNode) -> Result<impl View> {
         _ => "text-info",
     };
     Ok(view! {
-        <div class=(format!("my-6 px-4 py-4 rounded-lg border-l-4 shadow-sm {tone}")) role="alert">
+        <div class=(format!("my-6 px-4 py-4 rounded-lg shadow-sm {tone}")) role="alert">
             <div class="flex gap-4">
                 <div class=(format!("{text} mt-0.5 shrink-0"))>icon(glyph: glyph, class: "size-5")</div>
                 <div class="flex-1 min-w-0">
