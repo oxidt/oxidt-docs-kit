@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, expect, test } from 'bun:test';
 import { chromium } from '@playwright/test';
 
-const loader = await Bun.file('crates/dioxus-mdx/src/mermaid.js').text();
+const loader = await Bun.file('crates/oxidt-mdx/src/mermaid.js').text();
 let browser, page, requests, errors;
 const source = 'flowchart LR\n    A[Draft] --> B[Published]';
 const scan = () => page.evaluate(loader);
@@ -25,14 +25,14 @@ beforeEach(async () => {
     await page.route('http://docs.test/assets/pele/**', async route => {
         const path = new URL(route.request().url()).pathname.split('/assets/pele/')[1];
         requests.push(path);
-        await route.fulfill({ contentType: 'text/javascript', body: await Bun.file('crates/dioxus-mdx/assets/pele/' + path).text() });
+        await route.fulfill({ contentType: 'text/javascript', body: await Bun.file('crates/oxidt-mdx/assets/pele/' + path).text() });
     });
     await page.route('http://docs.test/', route => route.fulfill({
         contentType: 'text/html',
         body: '<!doctype html><html data-theme="light"><head><style>body{max-width:700px;margin:20px auto;font-family:system-ui}</style></head><body class="dk-root"></body></html>',
     }));
     await page.goto('http://docs.test/');
-    await page.addStyleTag({ content: await Bun.file('crates/dioxus-docs-kit/assets/docs-kit.css').text() });
+    await page.addStyleTag({ content: await Bun.file('crates/topcoat-docs-kit/assets/docs-kit.css').text() });
 });
 afterEach(async () => { await page.close(); expect(errors).toEqual([]); });
 
@@ -52,8 +52,8 @@ test('loads only near the viewport and repeated scans reuse the diagram', async 
     expect(requests.length).toBe(count);
 });
 
-test('both kit stylesheets apply theme colors without replacing the SVG', async () => {
-    for (const kit of ['dioxus-docs-kit', 'topcoat-docs-kit']) {
+test('the kit stylesheet applies theme colors without replacing the SVG', async () => {
+    for (const kit of ['topcoat-docs-kit']) {
         await page.locator('style').last().evaluate(el => el.remove());
         await page.addStyleTag({ content: await Bun.file(`crates/${kit}/assets/docs-kit.css`).text() });
         await insert();

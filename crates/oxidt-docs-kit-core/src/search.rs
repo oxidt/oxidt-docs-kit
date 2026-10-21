@@ -93,7 +93,7 @@ fn lower_char(c: char) -> char {
 /// char to keep the 1:1 char mapping; locale/typo folding is out of scope.
 ///
 /// Folds the *query*; the index's `*_lower` fields are folded the same way by
-/// `dioxus-docs-kit-build`, which carries a copy of this function.
+/// `oxidt-docs-kit-build`, which carries a copy of this function.
 pub(crate) fn search_lower(s: &str) -> String {
     s.chars().map(lower_char).collect()
 }

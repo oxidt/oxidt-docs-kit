@@ -24,7 +24,7 @@ async fn serves_the_pinned_entry_and_its_chunks() {
         "public, max-age=31536000, immutable"
     );
     let bytes = to_bytes(response.into_body(), usize::MAX).await.unwrap();
-    assert_eq!(&bytes[..], dioxus_mdx::pele_asset("lazy.js").unwrap());
+    assert_eq!(&bytes[..], oxidt_mdx::pele_asset("lazy.js").unwrap());
     let entry = std::str::from_utf8(&bytes).unwrap();
     let chunk = entry
         .split("./chunks/")

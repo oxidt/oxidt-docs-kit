@@ -313,7 +313,7 @@ fn search_index(bundle: &str) -> Result<String, String> {
         body: String,
         breadcrumb: String,
         #[serde(skip_serializing)]
-        api_method: Option<dioxus_mdx::HttpMethod>,
+        api_method: Option<oxidt_mdx::HttpMethod>,
         #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
         method: Option<&'static str>,
         #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]

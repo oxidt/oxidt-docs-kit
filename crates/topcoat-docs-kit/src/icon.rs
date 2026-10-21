@@ -1,6 +1,6 @@
-//! Inline Lucide icons, from the SVG data vendored in `dioxus-mdx`.
+//! Inline Lucide icons, from the SVG data vendored in `oxidt-mdx`.
 
-use dioxus_mdx::lucide::LucideIcon;
+use oxidt_mdx::lucide::LucideIcon;
 use topcoat::{
     Result,
     view::{Unescaped, View, component, view},

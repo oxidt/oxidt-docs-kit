@@ -45,7 +45,7 @@ impl BlogRegistry {
         }
 
         // Drafts are already dropped and posts already sorted newest-first by
-        // `dioxus-docs-kit-build`.
+        // `oxidt-docs-kit-build`.
         let posts: Vec<BlogPost> = bundle.posts;
 
         let mut tag_set: Vec<String> = posts
@@ -471,7 +471,7 @@ mod tests {
     /// Build a real bundle with the build-time generator, exactly as
     /// `build.rs` does, and hand it to the runtime as a `'static` string.
     fn bundle(manifest: &str, posts: &[(&str, &str)]) -> &'static str {
-        dioxus_docs_kit_build::blog_bundle_json(manifest, posts)
+        oxidt_docs_kit_build::blog_bundle_json(manifest, posts)
             .expect("generate blog bundle")
             .leak()
     }

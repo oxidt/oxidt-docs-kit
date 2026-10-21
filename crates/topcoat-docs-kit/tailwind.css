@@ -22,10 +22,10 @@
 @source "./src/**/*.rs";
 /* Badge classes chosen in match arms (`HttpMethod::badge_class()`,
    `ApiResponse::status_badge_class()`, …) live in the shared types. */
-@source "../dioxus-mdx/src/parser/**/*.rs";
+@source "../oxidt-mdx/src/parser/**/*.rs";
 
-/* The `--dk-*` / `--dk-hl-*` design tokens, shared with dioxus-docs-kit. */
-@import "../dioxus-docs-kit/theme.css";
+/* The `--dk-*` / `--dk-hl-*` design tokens. */
+@import "./theme.css";
 
 /* Blog reading progress: a scroll-driven animation, so no script. Browsers
    without scroll timelines would run it instantly to a full bar, so the bar

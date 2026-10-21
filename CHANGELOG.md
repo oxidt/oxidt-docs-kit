@@ -2,12 +2,25 @@
 
 All notable changes to this project are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions
-apply to all six crates (`dioxus-docs-kit`, `dioxus-docs-kit-build`,
-`oxidt-docs-kit-core`, `dioxus-mdx`, `hl-lite`, `topcoat-docs-kit`), which are released together from this workspace.
+apply to all crates in this workspace (`topcoat-docs-kit`,
+`oxidt-docs-kit-core`, `oxidt-docs-kit-build`, `oxidt-mdx`, `hl-lite`), which
+are released together. Up to 0.10 the workspace also held `dioxus-docs-kit` and
+`dioxus-mdx`; they now live in
+[hauju/dioxus-docs-kit](https://github.com/hauju/dioxus-docs-kit).
 
 ## [Unreleased]
 
 ### Changed
+
+- **BREAKING: Dioxus kit split out.** `dioxus-docs-kit`, the Dioxus renderer
+  half of `dioxus-mdx` and the Dioxus example site moved to
+  [hauju/dioxus-docs-kit](https://github.com/hauju/dioxus-docs-kit), back on
+  DaisyUI. This repo keeps the Topcoat kit and the shared pipeline.
+- **BREAKING: crates renamed.** `dioxus-docs-kit-build` is now
+  `oxidt-docs-kit-build`, and the parser and document types of `dioxus-mdx`
+  are now `oxidt-mdx` (no `components`, `web` or `mermaid` features; it never
+  depends on `dioxus`). `dioxus-mdx` itself continues in the Dioxus repo as
+  the renderer, re-exporting `oxidt-mdx`.
 
 - **Monochrome default look, no daisyUI.** The precompiled stylesheets now
   use oxidt-ui's daisyUI-compatible component classes and its monochrome

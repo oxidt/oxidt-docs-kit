@@ -71,8 +71,7 @@ pub fn load(opts: &Options) -> Result<&'static str, String> {
         specs.push((prefix.as_str(), read(&opts.root.join(spec))?));
     }
 
-    let bundle =
-        dioxus_docs_kit_build::docs_bundle_json(&nav_json, &pairs(&pages), &pairs(&specs))?;
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(&nav_json, &pairs(&pages), &pairs(&specs))?;
     let bundle: &'static str = Box::leak(bundle.into_boxed_str());
     let registry = DocsConfig::new(bundle)
         .with_theme_toggle("light", "dark", "dark")
