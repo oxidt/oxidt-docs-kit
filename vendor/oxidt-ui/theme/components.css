@@ -1,0 +1,2153 @@
+/* ── Oxidt components ──
+   A Rust-toolchain replacement for the subset of daisyUI 5 the Oxidt apps use.
+   Class names match daisyUI's so existing markup keeps working; the rules are
+   rewritten for the monochrome theme (no depth, no noise).
+
+   Conventions:
+   - Every class is a Tailwind `@utility`, so only classes found in the sources
+     are emitted and variants such as `md:btn-sm` work.
+   - A component's own declarations sit in `@layer oxidt` (nested inside
+     Tailwind's utilities layer). Plain utilities therefore always win:
+     `btn h-12 px-2` behaves as expected.
+   - Modifiers (`btn-primary`, `badge-sm`…) set only custom properties that the
+     base rule reads, so their order in the output never matters.
+
+   Ported from daisyUI (MIT, © Pouya Saadeghi); see THIRD_PARTY_NOTICES.md. */
+
+/* ── Button ── */
+
+@utility btn {
+    @layer oxidt {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        height: var(--btn-h, 2.5rem);
+        padding-inline: var(--btn-px, 1rem);
+        border: 1px solid
+            var(--btn-border, var(--btn-color, var(--color-base-200)));
+        border-radius: var(--radius-field);
+        background-color: var(--btn-bg, var(--btn-color, var(--color-base-200)));
+        color: var(--btn-fg, var(--btn-content, var(--color-base-content)));
+        font-size: var(--btn-fs, 0.875rem);
+        font-weight: 600;
+        white-space: nowrap;
+        text-decoration: none;
+        cursor: pointer;
+        user-select: none;
+        touch-action: manipulation;
+        outline-offset: 2px;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            opacity 0.15s ease,
+            scale 0.1s ease;
+
+        &:hover,
+        &.btn-active {
+            background-color: var(
+                --btn-hover-bg,
+                color-mix(
+                    in oklab,
+                    var(--btn-bg, var(--btn-color, var(--color-base-200))) 88%,
+                    var(--btn-fg, var(--btn-content, var(--color-base-content)))
+                )
+            );
+        }
+
+        &:focus-visible {
+            outline: 2px solid
+                var(--btn-color, var(--color-base-content));
+        }
+
+        &:active:not(:disabled, [disabled], .btn-disabled) {
+            scale: 0.98;
+        }
+
+        &:is(:disabled, [disabled], .btn-disabled) {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
+@utility btn-primary {
+    --btn-color: var(--color-primary);
+    --btn-content: var(--color-primary-content);
+}
+@utility btn-secondary {
+    --btn-color: var(--color-secondary);
+    --btn-content: var(--color-secondary-content);
+}
+@utility btn-accent {
+    --btn-color: var(--color-accent);
+    --btn-content: var(--color-accent-content);
+}
+@utility btn-neutral {
+    --btn-color: var(--color-neutral);
+    --btn-content: var(--color-neutral-content);
+}
+@utility btn-info {
+    --btn-color: var(--color-info);
+    --btn-content: var(--color-info-content);
+}
+@utility btn-success {
+    --btn-color: var(--color-success);
+    --btn-content: var(--color-success-content);
+}
+@utility btn-warning {
+    --btn-color: var(--color-warning);
+    --btn-content: var(--color-warning-content);
+}
+@utility btn-error {
+    --btn-color: var(--color-error);
+    --btn-content: var(--color-error-content);
+}
+
+/* Styles: derive fill, text and border from the colour modifier, if any. */
+@utility btn-outline {
+    --btn-bg: transparent;
+    --btn-fg: var(--btn-color, var(--color-base-content));
+    --btn-border: var(--btn-color, currentColor);
+
+    &:is(:hover, .btn-active) {
+        --btn-hover-bg: var(--btn-color, var(--color-base-content));
+        --btn-fg: var(--btn-content, var(--color-base-100));
+    }
+}
+@utility btn-soft {
+    --btn-bg: color-mix(
+        in oklab,
+        var(--btn-color, var(--color-base-content)) 8%,
+        var(--color-base-100)
+    );
+    --btn-fg: var(--btn-color, var(--color-base-content));
+    --btn-border: transparent;
+}
+@utility btn-ghost {
+    --btn-bg: transparent;
+    --btn-fg: var(--btn-color, currentColor);
+    --btn-border: transparent;
+
+    &:is(:hover, .btn-active, :focus-visible) {
+        --btn-fg: var(--btn-color, var(--color-base-content));
+    }
+}
+@utility btn-link {
+    --btn-bg: transparent;
+    --btn-fg: var(--btn-color, var(--color-primary));
+    --btn-border: transparent;
+    --btn-hover-bg: transparent;
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+}
+
+@utility btn-xs {
+    --btn-h: 1.5rem;
+    --btn-px: 0.5rem;
+    --btn-fs: 0.6875rem;
+}
+@utility btn-sm {
+    --btn-h: 2rem;
+    --btn-px: 0.75rem;
+    --btn-fs: 0.75rem;
+}
+@utility btn-md {
+    --btn-h: 2.5rem;
+    --btn-px: 1rem;
+    --btn-fs: 0.875rem;
+}
+@utility btn-lg {
+    --btn-h: 3rem;
+    --btn-px: 1.25rem;
+    --btn-fs: 1.125rem;
+}
+/* Shapes set padding directly rather than through `--btn-px`, which the
+   size modifiers also set; otherwise `btn-sm btn-square` would depend on
+   which rule Tailwind happens to emit last. */
+@utility btn-square {
+    width: var(--btn-h, 2.5rem);
+    padding-inline: 0;
+}
+@utility btn-circle {
+    width: var(--btn-h, 2.5rem);
+    padding-inline: 0;
+    border-radius: 9999px;
+}
+@utility btn-wide {
+    width: 16rem;
+}
+@utility btn-block {
+    width: 100%;
+}
+
+/* ── Typography ──
+   daisyUI's integration with @tailwindcss/typography: prose colours from the
+   palette, and inline code as a pill instead of backticks. Plain CSS in the
+   utilities layer, as in daisyUI, so it applies wherever `prose` is used. */
+
+@layer utilities {
+    :root .prose {
+        --tw-prose-body: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+        --tw-prose-headings: var(--color-base-content);
+        --tw-prose-lead: var(--color-base-content);
+        --tw-prose-links: var(--color-base-content);
+        --tw-prose-bold: var(--color-base-content);
+        --tw-prose-counters: var(--color-base-content);
+        --tw-prose-bullets: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+        --tw-prose-hr: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+        --tw-prose-quotes: var(--color-base-content);
+        --tw-prose-quote-borders: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+        --tw-prose-captions: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+        --tw-prose-code: var(--color-base-content);
+        --tw-prose-pre-code: var(--color-neutral-content);
+        --tw-prose-pre-bg: var(--color-neutral);
+        --tw-prose-th-borders: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+        --tw-prose-td-borders: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+        --tw-prose-kbd: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+
+        & :where(code):not(pre > code) {
+            padding-block: 0.2em;
+            padding-inline: 0.5em;
+            border: 1px solid var(--color-base-300);
+            border-radius: var(--radius-selector);
+            background-color: var(--color-base-200);
+            font-weight: inherit;
+
+            &::before,
+            &::after {
+                display: none;
+            }
+        }
+    }
+}
+
+/* ── Card ── */
+
+@utility card {
+    @layer oxidt {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        border-radius: var(--radius-box);
+        overflow-wrap: break-word;
+        outline-offset: 2px;
+    }
+}
+@utility card-body {
+    @layer oxidt {
+        display: flex;
+        flex: auto;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: var(--card-p, 1.5rem);
+        font-size: 0.875rem;
+
+        @media (max-width: 640px) {
+            padding: var(--card-p, 1rem);
+        }
+    }
+}
+@utility card-title {
+    @layer oxidt {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+}
+@utility card-actions {
+    @layer oxidt {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+@utility card-sm {
+    --card-p: 1rem;
+}
+@utility card-border {
+    border: 1px solid var(--color-base-300);
+}
+
+/* ── Badge ── */
+
+@utility badge {
+    @layer oxidt {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        height: var(--badge-h, 1.5rem);
+        padding-inline: calc(var(--badge-h, 1.5rem) / 2 - 1px);
+        border: 1px solid
+            var(--badge-border, var(--badge-color, var(--color-base-300)));
+        border-radius: var(--radius-selector);
+        background-color: var(--badge-bg, var(--badge-color, var(--color-base-100)));
+        color: var(--badge-fg, var(--badge-content, var(--color-base-content)));
+        font-size: var(--badge-fs, 0.875rem);
+        white-space: nowrap;
+        vertical-align: middle;
+        transition: transform 0.2s ease;
+    }
+}
+
+@utility badge-primary {
+    --badge-color: var(--color-primary);
+    --badge-content: var(--color-primary-content);
+}
+@utility badge-secondary {
+    --badge-color: var(--color-secondary);
+    --badge-content: var(--color-secondary-content);
+}
+@utility badge-accent {
+    --badge-color: var(--color-accent);
+    --badge-content: var(--color-accent-content);
+}
+@utility badge-neutral {
+    --badge-color: var(--color-neutral);
+    --badge-content: var(--color-neutral-content);
+}
+@utility badge-info {
+    --badge-color: var(--color-info);
+    --badge-content: var(--color-info-content);
+}
+@utility badge-success {
+    --badge-color: var(--color-success);
+    --badge-content: var(--color-success-content);
+}
+@utility badge-warning {
+    --badge-color: var(--color-warning);
+    --badge-content: var(--color-warning-content);
+}
+@utility badge-error {
+    --badge-color: var(--color-error);
+    --badge-content: var(--color-error-content);
+}
+
+@utility badge-outline {
+    --badge-bg: transparent;
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-border: currentColor;
+}
+@utility badge-soft {
+    --badge-bg: color-mix(
+        in oklab,
+        var(--badge-color, var(--color-base-content)) 10%,
+        var(--color-base-100)
+    );
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-border: color-mix(
+        in oklab,
+        var(--badge-color, var(--color-base-content)) 10%,
+        var(--color-base-100)
+    );
+}
+@utility badge-ghost {
+    --badge-bg: var(--color-base-200);
+    --badge-fg: var(--color-base-content);
+    --badge-border: var(--color-base-200);
+}
+
+@utility badge-xs {
+    --badge-h: 1rem;
+    --badge-fs: 0.625rem;
+}
+@utility badge-sm {
+    --badge-h: 1.25rem;
+    --badge-fs: 0.75rem;
+}
+@utility badge-md {
+    --badge-h: 1.5rem;
+    --badge-fs: 0.875rem;
+}
+@utility badge-lg {
+    --badge-h: 1.75rem;
+    --badge-fs: 1rem;
+}
+
+/* ── Text fields: input, select, textarea, file-input ──
+   `input-bordered` and friends are daisyUI 4 names; fields are bordered by
+   default, so those classes need no rule. */
+
+@utility input {
+    @layer oxidt {
+        display: inline-flex;
+        flex-shrink: 1;
+        align-items: center;
+        gap: 0.5rem;
+        width: clamp(3rem, 20rem, 100%);
+        height: var(--field-h, 2.5rem);
+        padding-inline: 0.75rem;
+        border: 1px solid
+            var(--field-border, color-mix(in oklab, var(--color-base-content) 20%, transparent));
+        border-radius: var(--radius-field);
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        font-size: var(--field-fs, 0.875rem);
+        vertical-align: middle;
+        appearance: none;
+        transition:
+            border-color 0.15s ease,
+            outline-color 0.15s ease;
+
+        &::placeholder,
+        & input::placeholder {
+            color: color-mix(in oklab, currentColor 50%, transparent);
+        }
+
+        &:is(:focus, :focus-within) {
+            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline-offset: 2px;
+            border-color: var(--field-ring, var(--color-base-content));
+        }
+
+        & :where(input) {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            border: 0;
+            background: transparent;
+            outline: none;
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+}
+
+@utility select {
+    @layer oxidt {
+        display: inline-flex;
+        flex-shrink: 1;
+        align-items: center;
+        width: clamp(3rem, 20rem, 100%);
+        height: var(--field-h, 2.5rem);
+        padding-inline: 0.75rem 1.75rem;
+        border: 1px solid
+            var(--field-border, color-mix(in oklab, var(--color-base-content) 20%, transparent));
+        border-radius: var(--radius-field);
+        background-color: var(--color-base-100);
+        background-image:
+            linear-gradient(45deg, transparent 50%, currentColor 50%),
+            linear-gradient(135deg, currentColor 50%, transparent 50%);
+        background-position:
+            calc(100% - 20px) calc(50% + 1px),
+            calc(100% - 16.1px) calc(50% + 1px);
+        background-size: 4px 4px;
+        background-repeat: no-repeat;
+        color: var(--color-base-content);
+        font-size: var(--field-fs, 0.875rem);
+        cursor: pointer;
+        appearance: none;
+
+        &:focus {
+            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline-offset: 2px;
+            border-color: var(--field-ring, var(--color-base-content));
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+}
+
+@utility textarea {
+    @layer oxidt {
+        width: clamp(3rem, 20rem, 100%);
+        min-height: 5rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid
+            var(--field-border, color-mix(in oklab, var(--color-base-content) 20%, transparent));
+        border-radius: var(--radius-field);
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        font-size: var(--field-fs, 0.875rem);
+        appearance: none;
+
+        &::placeholder {
+            color: color-mix(in oklab, currentColor 50%, transparent);
+        }
+
+        &:focus {
+            outline: 2px solid var(--field-ring, var(--color-base-content));
+            outline-offset: 2px;
+            border-color: var(--field-ring, var(--color-base-content));
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+}
+
+@utility file-input {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: center;
+        width: clamp(3rem, 20rem, 100%);
+        height: var(--field-h, 2.5rem);
+        border: 1px solid
+            var(--field-border, color-mix(in oklab, var(--color-base-content) 20%, transparent));
+        border-radius: var(--radius-field);
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        font-size: var(--field-fs, 0.875rem);
+        overflow: hidden;
+        cursor: pointer;
+
+        &::file-selector-button {
+            height: 100%;
+            margin-inline-end: 1rem;
+            padding-inline: 1rem;
+            border: 0;
+            border-inline-end: 1px solid var(--color-base-300);
+            background-color: var(--color-base-200);
+            color: var(--color-base-content);
+            font-weight: 500;
+            cursor: pointer;
+        }
+    }
+}
+
+@utility input-error {
+    --field-border: var(--color-error);
+    --field-ring: var(--color-error);
+}
+@utility select-error {
+    --field-border: var(--color-error);
+    --field-ring: var(--color-error);
+}
+@utility textarea-error {
+    --field-border: var(--color-error);
+    --field-ring: var(--color-error);
+}
+@utility input-xs {
+    --field-h: 1.5rem;
+    --field-fs: 0.6875rem;
+}
+@utility input-sm {
+    --field-h: 2rem;
+    --field-fs: 0.75rem;
+}
+@utility input-lg {
+    --field-h: 3rem;
+    --field-fs: 1.125rem;
+}
+@utility select-xs {
+    --field-h: 1.5rem;
+    --field-fs: 0.6875rem;
+}
+@utility select-sm {
+    --field-h: 2rem;
+    --field-fs: 0.75rem;
+}
+@utility select-lg {
+    --field-h: 3rem;
+    --field-fs: 1.125rem;
+}
+@utility textarea-sm {
+    --field-fs: 0.75rem;
+}
+@utility textarea-lg {
+    --field-fs: 1.125rem;
+}
+@utility file-input-sm {
+    --field-h: 2rem;
+    --field-fs: 0.75rem;
+}
+
+/* ── Checkbox, radio, toggle ── */
+
+@utility checkbox {
+    @layer oxidt {
+        position: relative;
+        display: inline-grid;
+        flex-shrink: 0;
+        place-content: center;
+        width: var(--check-size, 1.5rem);
+        height: var(--check-size, 1.5rem);
+        border: 1px solid
+            var(--check-color, color-mix(in oklab, var(--color-base-content) 20%, transparent));
+        border-radius: var(--radius-selector);
+        background-color: var(--color-base-100);
+        vertical-align: middle;
+        cursor: pointer;
+        appearance: none;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &::before {
+            content: "";
+            width: 75%;
+            height: 75%;
+            background-color: var(--check-content, var(--color-base-content));
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+                center / contain no-repeat;
+            opacity: 0;
+            scale: 0.6;
+            transition:
+                opacity 0.15s ease,
+                scale 0.15s ease;
+        }
+
+        /* Unchecked and checked share the border; only a colour modifier
+           fills the box, as in daisyUI. */
+        &:checked,
+        &[aria-checked="true"] {
+            background-color: var(--check-color, transparent);
+
+            &::before {
+                opacity: 1;
+                scale: 1;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--check-color, var(--color-base-content));
+            outline-offset: 2px;
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+    }
+}
+
+@utility radio {
+    @layer oxidt {
+        position: relative;
+        flex-shrink: 0;
+        width: var(--check-size, 1.5rem);
+        height: var(--check-size, 1.5rem);
+        border: 1px solid
+            color-mix(in oklab, var(--color-base-content) 20%, transparent);
+        border-radius: 9999px;
+        background-color: var(--color-base-100);
+        vertical-align: middle;
+        cursor: pointer;
+        appearance: none;
+        transition:
+            background-color 0.15s ease,
+            box-shadow 0.15s ease;
+
+        &:checked,
+        &[aria-checked="true"] {
+            border-color: var(--check-color, var(--color-base-content));
+            background-color: var(--check-color, var(--color-base-content));
+            box-shadow: inset 0 0 0 calc(var(--check-size, 1.5rem) * 0.22)
+                var(--color-base-100);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--check-color, var(--color-base-content));
+            outline-offset: 2px;
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+    }
+}
+
+@utility toggle {
+    @layer oxidt {
+        --toggle-p: calc(var(--toggle-h, 1.5rem) * 0.125);
+        position: relative;
+        flex-shrink: 0;
+        width: calc(var(--toggle-h, 1.5rem) * 2 - (1px + var(--toggle-p)) * 2);
+        height: var(--toggle-h, 1.5rem);
+        border: 1px solid currentColor;
+        border-radius: calc(
+            var(--radius-selector) + var(--toggle-p) + 1px
+        );
+        background-color: transparent;
+        color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+        vertical-align: middle;
+        cursor: pointer;
+        appearance: none;
+        transition: color 0.3s ease;
+
+        /* The knob is the current colour: grey off, the tone on. */
+        &::before {
+            content: "";
+            position: absolute;
+            top: var(--toggle-p);
+            inset-inline-start: var(--toggle-p);
+            height: calc(100% - var(--toggle-p) * 2);
+            aspect-ratio: 1;
+            border-radius: var(--radius-selector);
+            background-color: currentColor;
+            transition: translate 0.2s ease;
+        }
+
+        &:checked,
+        &[aria-checked="true"] {
+            background-color: var(--color-base-100);
+            color: var(--check-color, var(--color-base-content));
+
+            &::before {
+                translate: calc(var(--toggle-h, 1.5rem) - 2px - var(--toggle-p) * 2) 0;
+            }
+        }
+
+        &:dir(rtl):checked::before {
+            translate: calc((var(--toggle-h, 1.5rem) - 2px - var(--toggle-p) * 2) * -1) 0;
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+
+        &:is(:disabled, [disabled]) {
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+    }
+}
+
+@utility checkbox-primary {
+    --check-color: var(--color-primary);
+    --check-content: var(--color-primary-content);
+}
+@utility checkbox-success {
+    --check-color: var(--color-success);
+    --check-content: var(--color-success-content);
+}
+@utility checkbox-error {
+    --check-color: var(--color-error);
+    --check-content: var(--color-error-content);
+}
+@utility checkbox-xs {
+    --check-size: 1rem;
+}
+@utility checkbox-sm {
+    --check-size: 1.25rem;
+}
+@utility checkbox-lg {
+    --check-size: 1.75rem;
+}
+@utility radio-primary {
+    --check-color: var(--color-primary);
+}
+@utility radio-sm {
+    --check-size: 1.25rem;
+}
+@utility toggle-primary {
+    --check-color: var(--color-primary);
+}
+@utility toggle-success {
+    --check-color: var(--color-success);
+}
+@utility toggle-error {
+    --check-color: var(--color-error);
+}
+@utility toggle-xs {
+    --toggle-h: 1rem;
+}
+@utility toggle-sm {
+    --toggle-h: 1.25rem;
+}
+@utility toggle-lg {
+    --toggle-h: 1.75rem;
+}
+
+/* ── Label, fieldset ── */
+
+@utility label {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: color-mix(in oklab, currentColor 65%, transparent);
+        white-space: nowrap;
+    }
+}
+@utility label-text {
+    @layer oxidt {
+        color: var(--color-base-content);
+        font-size: 0.875rem;
+    }
+}
+@utility fieldset {
+    @layer oxidt {
+        display: grid;
+        grid-auto-rows: max-content;
+        gap: 0.375rem;
+        padding-block: 0.25rem;
+        font-size: 0.75rem;
+    }
+}
+@utility fieldset-legend {
+    @layer oxidt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding-block: 0.5rem;
+        color: var(--color-base-content);
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+}
+@utility fieldset-label {
+    @layer oxidt {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: color-mix(in oklab, var(--color-base-content) 65%, transparent);
+        font-size: 0.75rem;
+    }
+}
+
+/* ── Table ── */
+
+@utility table {
+    @layer oxidt {
+        position: relative;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: var(--radius-box);
+        font-size: 0.875rem;
+        text-align: start;
+
+        & :where(th, td) {
+            padding: var(--table-p, 0.75rem 1rem);
+            text-align: start;
+            vertical-align: middle;
+        }
+
+        & :where(:not(thead, tfoot) tr) {
+            font-size: var(--table-fs, 0.875rem);
+        }
+
+        & :where(thead, tfoot) {
+            color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        & :where(thead tr :is(td, th), tbody tr:not(:last-child) :is(td, th)) {
+            border-bottom: 1px solid
+                color-mix(in oklab, var(--color-base-content) 5%, transparent);
+        }
+
+        & :where(tfoot tr:first-child :is(td, th)) {
+            border-top: 1px solid
+                color-mix(in oklab, var(--color-base-content) 5%, transparent);
+        }
+    }
+}
+@utility table-xs {
+    --table-p: 0.25rem 0.5rem;
+    --table-fs: 0.6875rem;
+}
+@utility table-sm {
+    --table-p: 0.5rem 0.75rem;
+    --table-fs: 0.75rem;
+}
+@utility table-zebra {
+    & tbody tr:nth-child(even) {
+        background-color: var(--color-base-200);
+    }
+}
+@utility table-pin-rows {
+    & thead tr {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: var(--color-base-100);
+    }
+}
+
+/* ── Join ── */
+
+@utility join {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: stretch;
+    }
+
+    & > .join-item:not(:first-child) {
+        margin-inline-start: -1px;
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+    }
+    & > .join-item:not(:last-child) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+    }
+    & > .join-item:focus-visible {
+        z-index: 1;
+    }
+}
+@utility join-vertical {
+    flex-direction: column;
+
+    &.join > .join-item {
+        margin-inline-start: 0;
+        border-radius: 0;
+    }
+    &.join > .join-item:not(:first-child) {
+        margin-top: -1px;
+    }
+    &.join > .join-item:first-child {
+        border-start-start-radius: var(--radius-field);
+        border-start-end-radius: var(--radius-field);
+    }
+    &.join > .join-item:last-child {
+        border-end-start-radius: var(--radius-field);
+        border-end-end-radius: var(--radius-field);
+    }
+}
+@utility join-horizontal {
+    flex-direction: row;
+}
+
+/* ── Alert ── */
+
+@utility alert {
+    @layer oxidt {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: auto;
+        justify-content: start;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid
+            var(--alert-border, var(--alert-color, var(--color-base-300)));
+        border-radius: var(--radius-box);
+        background-color: var(--alert-bg, var(--alert-color, var(--color-base-200)));
+        color: var(--alert-fg, var(--alert-content, var(--color-base-content)));
+        font-size: 0.875rem;
+        text-align: start;
+    }
+}
+@utility alert-info {
+    --alert-color: var(--color-info);
+    --alert-content: var(--color-info-content);
+}
+@utility alert-success {
+    --alert-color: var(--color-success);
+    --alert-content: var(--color-success-content);
+}
+@utility alert-warning {
+    --alert-color: var(--color-warning);
+    --alert-content: var(--color-warning-content);
+}
+@utility alert-error {
+    --alert-color: var(--color-error);
+    --alert-content: var(--color-error-content);
+}
+@utility alert-soft {
+    --alert-bg: color-mix(
+        in oklab,
+        var(--alert-color, var(--color-base-content)) 8%,
+        var(--color-base-100)
+    );
+    --alert-fg: var(--alert-color, var(--color-base-content));
+    --alert-border: color-mix(
+        in oklab,
+        var(--alert-color, var(--color-base-content)) 12%,
+        var(--color-base-100)
+    );
+}
+@utility alert-outline {
+    --alert-bg: transparent;
+    --alert-fg: var(--alert-color, var(--color-base-content));
+}
+
+/* ── Tabs ──
+   Works with buttons/links (`tab-active` or `aria-selected`) and with radio
+   inputs (`<input type="radio" class="tab" aria-label="…">` followed by a
+   `.tab-content`). */
+
+@utility tabs {
+    @layer oxidt {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+}
+@utility tab {
+    @layer oxidt {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--tab-h, 2.5rem);
+        padding-inline: 0.75rem;
+        border: 0 solid transparent;
+        color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+        font-size: 0.875rem;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        appearance: none;
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+
+        &:hover {
+            color: var(--color-base-content);
+        }
+
+        &:is(input)::after {
+            content: attr(aria-label);
+        }
+
+        &:is(.tab-active, [aria-selected="true"], [aria-current="page"], :checked) {
+            color: var(--color-base-content);
+            font-weight: 500;
+        }
+
+        &:is(:disabled, [disabled], .tab-disabled) {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+    }
+}
+@utility tab-content {
+    @layer oxidt {
+        display: none;
+        order: 1;
+        width: 100%;
+        border: 1px solid transparent;
+        border-radius: var(--radius-box);
+    }
+
+    .tab:is(:checked, .tab-active, [aria-selected="true"]) + & {
+        display: block;
+    }
+}
+@utility tabs-border {
+    & > .tab::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        width: 80%;
+        height: 3px;
+        border-radius: var(--radius-field);
+        background-color: transparent;
+        transition: background-color 0.2s ease;
+    }
+    & > .tab:is(.tab-active, [aria-selected="true"], [aria-current="page"], :checked)::before {
+        background-color: var(--color-base-content);
+    }
+}
+@utility tabs-box {
+    padding: 0.25rem;
+    border-radius: var(--radius-field);
+    background-color: var(--color-base-200);
+
+    & > .tab {
+        --tab-h: 2rem;
+        border-radius: calc(var(--radius-field) - 0.125rem);
+    }
+    & > .tab:is(.tab-active, [aria-selected="true"], [aria-current="page"], :checked) {
+        background-color: var(--color-base-100);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+    }
+}
+@utility tabs-sm {
+    & > .tab {
+        --tab-h: 2rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ── Dropdown ──
+   Opens on focus (a `tabindex="0"` trigger), on `details[open]`, or with
+   `dropdown-open`. */
+
+@utility dropdown {
+    @layer oxidt {
+        position: relative;
+        display: inline-block;
+    }
+
+    &:not(details) > .dropdown-content {
+        visibility: hidden;
+        opacity: 0;
+        scale: 0.96;
+    }
+
+    &:not(details):is(:focus-within, .dropdown-open) > .dropdown-content {
+        visibility: visible;
+        opacity: 1;
+        scale: 1;
+    }
+
+    &:is(details) > summary {
+        list-style: none;
+    }
+    &:is(details) > summary::-webkit-details-marker {
+        display: none;
+    }
+}
+@utility dropdown-content {
+    @layer oxidt {
+        position: absolute;
+        top: 100%;
+        inset-inline-start: 0;
+        z-index: 999;
+        margin-top: 0.25rem;
+        transform-origin: top;
+        transition:
+            opacity 0.15s ease,
+            scale 0.15s ease,
+            visibility 0.15s;
+    }
+}
+@utility dropdown-end {
+    & > .dropdown-content {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+}
+@utility dropdown-top {
+    & > .dropdown-content {
+        top: auto;
+        bottom: 100%;
+        margin-top: 0;
+        margin-bottom: 0.25rem;
+        transform-origin: bottom;
+    }
+}
+@utility dropdown-open {
+    & > .dropdown-content {
+        visibility: visible;
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+/* ── Menu ── */
+
+@utility menu {
+    @layer oxidt {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        padding: 0.5rem;
+        font-size: var(--menu-fs, 0.875rem);
+
+        & :where(li) {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+
+        & :where(li > a, li > button, li > span, li > label, li > details > summary) {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(auto, max-content) auto max-content;
+            align-content: flex-start;
+            align-items: center;
+            gap: 0.5rem;
+            padding: var(--menu-p, 0.375rem 0.75rem);
+            border-radius: var(--radius-field);
+            text-align: start;
+            text-decoration: none;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.15s ease;
+        }
+
+        & :where(li > a, li > button, li > label, li > details > summary):hover {
+            background-color: color-mix(
+                in oklab,
+                var(--color-base-content) 8%,
+                transparent
+            );
+        }
+
+        & :where(li > details > summary) {
+            list-style: none;
+        }
+        & :where(li > details > summary)::-webkit-details-marker {
+            display: none;
+        }
+
+        & :where(li ul) {
+            position: relative;
+            margin-inline-start: 1rem;
+            padding-inline-start: 0.5rem;
+            white-space: nowrap;
+            border-inline-start: 1px solid
+                color-mix(in oklab, var(--color-base-content) 10%, transparent);
+        }
+
+        & :where(li.disabled > *, li > .menu-disabled) {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    }
+
+    & :where(li > .menu-active, li > .active, li > [aria-current="page"]) {
+        background-color: var(--color-neutral);
+        color: var(--color-neutral-content);
+    }
+}
+@utility menu-title {
+    @layer oxidt {
+        padding: 0.5rem 0.75rem;
+        color: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+}
+@utility menu-horizontal {
+    flex-direction: row;
+    display: inline-flex;
+
+    & > li:not(.menu-title) > details > ul {
+        position: absolute;
+        margin-top: 1rem;
+        margin-inline-start: 0;
+        padding: 0.5rem;
+        border: 0;
+        border-radius: var(--radius-box);
+        background-color: var(--color-base-100);
+        box-shadow: 0 12px 32px -8px rgb(0 0 0 / 0.15);
+    }
+}
+@utility menu-xs {
+    --menu-p: 0.25rem 0.5rem;
+    --menu-fs: 0.6875rem;
+}
+@utility menu-sm {
+    --menu-p: 0.25rem 0.625rem;
+    --menu-fs: 0.75rem;
+}
+
+/* ── Modal ──
+   `<dialog class="modal">` opened with `showModal()`, or the checkbox
+   (`modal-toggle`) and `modal-open` patterns. */
+
+@utility modal {
+    @layer oxidt {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        overscroll-behavior: contain;
+        background-color: transparent;
+        color: inherit;
+        pointer-events: none;
+        visibility: hidden;
+        opacity: 0;
+        transition:
+            opacity 0.2s ease,
+            visibility 0.2s,
+            background-color 0.2s ease;
+
+        &::backdrop {
+            display: none;
+        }
+    }
+
+    &:is([open], :target, .modal-open),
+    .modal-toggle:checked + & {
+        pointer-events: auto;
+        visibility: visible;
+        opacity: 1;
+        background-color: rgb(0 0 0 / 0.4);
+    }
+
+    &:is([open], :target, .modal-open) > .modal-box,
+    .modal-toggle:checked + & > .modal-box {
+        scale: 1;
+    }
+}
+@utility modal-box {
+    @layer oxidt {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        width: 91.666667%;
+        max-width: 32rem;
+        max-height: 100vh;
+        padding: 1.5rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-radius: var(--radius-box);
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        scale: 0.96;
+        transition: scale 0.2s ease;
+    }
+}
+@utility modal-action {
+    @layer oxidt {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+}
+@utility modal-backdrop {
+    @layer oxidt {
+        z-index: -1;
+        display: grid;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        align-self: stretch;
+        justify-self: stretch;
+        color: transparent;
+
+        & > button {
+            cursor: default;
+        }
+    }
+}
+@utility modal-toggle {
+    position: fixed;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    appearance: none;
+}
+
+/* ── Drawer ── */
+
+@utility drawer {
+    @layer oxidt {
+        position: relative;
+        display: grid;
+        grid-auto-columns: max-content auto;
+        width: 100%;
+    }
+}
+@utility drawer-toggle {
+    position: fixed;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    appearance: none;
+}
+@utility drawer-content {
+    @layer oxidt {
+        grid-row-start: 1;
+        grid-column-start: 2;
+        min-width: 0;
+    }
+}
+@utility drawer-side {
+    @layer oxidt {
+        position: fixed;
+        top: 0;
+        inset-inline-start: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
+        grid-row-start: 1;
+        grid-column-start: 1;
+        align-items: flex-start;
+        justify-items: start;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        overscroll-behavior: contain;
+        pointer-events: none;
+        visibility: hidden;
+        transition: visibility 0.3s;
+
+        & > * {
+            grid-row-start: 1;
+            grid-column-start: 1;
+        }
+
+        & > :not(.drawer-overlay) {
+            translate: -100%;
+            transition: translate 0.3s ease;
+            will-change: transform;
+        }
+
+        &:dir(rtl) > :not(.drawer-overlay) {
+            translate: 100%;
+        }
+    }
+
+    .drawer-toggle:checked ~ & {
+        pointer-events: auto;
+        visibility: visible;
+        overflow-y: auto;
+    }
+
+    .drawer-toggle:checked ~ & > :not(.drawer-overlay) {
+        translate: 0;
+    }
+
+    .drawer-toggle:checked ~ & > .drawer-overlay {
+        background-color: rgb(0 0 0 / 0.4);
+    }
+}
+@utility drawer-overlay {
+    @layer oxidt {
+        position: sticky;
+        top: 0;
+        place-self: stretch;
+        background-color: transparent;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+}
+@utility drawer-open {
+    & > .drawer-side {
+        position: sticky;
+        display: block;
+        width: auto;
+        overflow-y: auto;
+        overscroll-behavior: auto;
+        pointer-events: auto;
+        visibility: visible;
+    }
+
+    & > .drawer-side > :not(.drawer-overlay) {
+        translate: 0;
+    }
+
+    & > .drawer-side > .drawer-overlay,
+    & > .drawer-toggle:checked ~ .drawer-side > .drawer-overlay {
+        background-color: transparent;
+        cursor: default;
+    }
+}
+
+/* ── Loading ── */
+
+@utility loading {
+    @layer oxidt {
+        display: inline-block;
+        aspect-ratio: 1;
+        width: var(--loading-size, 1.5rem);
+        background-color: currentColor;
+        vertical-align: middle;
+        pointer-events: none;
+        mask: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E")
+            center / 100% no-repeat;
+    }
+}
+/* The spinner is the default shape; the class is kept for existing markup. */
+@utility loading-spinner {
+    --loading-shape: spinner;
+}
+@utility loading-xs {
+    --loading-size: 1rem;
+}
+@utility loading-sm {
+    --loading-size: 1.25rem;
+}
+@utility loading-md {
+    --loading-size: 1.5rem;
+}
+@utility loading-lg {
+    --loading-size: 1.75rem;
+}
+
+/* ── Progress ── */
+
+@utility progress {
+    @layer oxidt {
+        position: relative;
+        width: 100%;
+        height: 0.5rem;
+        overflow: hidden;
+        border: 0;
+        border-radius: 9999px;
+        background-color: color-mix(
+            in oklab,
+            var(--color-base-content) 12%,
+            transparent
+        );
+        color: var(--progress-color, var(--color-base-content));
+        appearance: none;
+
+        &::-webkit-progress-bar {
+            background-color: transparent;
+        }
+        &::-webkit-progress-value {
+            border-radius: 9999px;
+            background-color: currentColor;
+        }
+        &::-moz-progress-bar {
+            border-radius: 9999px;
+            background-color: currentColor;
+        }
+    }
+}
+@utility progress-primary {
+    --progress-color: var(--color-primary);
+}
+@utility progress-success {
+    --progress-color: var(--color-success);
+}
+@utility progress-warning {
+    --progress-color: var(--color-warning);
+}
+@utility progress-error {
+    --progress-color: var(--color-error);
+}
+
+/* ── Divider ── */
+
+@utility divider {
+    @layer oxidt {
+        display: flex;
+        flex-direction: row;
+        align-self: stretch;
+        align-items: center;
+        gap: 1rem;
+        height: 1rem;
+        margin: 1rem 0;
+        color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+        font-size: 0.875rem;
+        white-space: nowrap;
+
+        &::before,
+        &::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background-color: color-mix(
+                in oklab,
+                var(--color-base-content) 10%,
+                transparent
+            );
+        }
+
+        &:not(:has(*)):empty {
+            gap: 0;
+        }
+    }
+}
+@utility divider-horizontal {
+    flex-direction: column;
+    width: 1rem;
+    height: auto;
+    margin: 0 1rem;
+
+    &::before,
+    &::after {
+        width: 1px;
+        height: 100%;
+    }
+}
+
+/* ── Navbar, hero, footer ── */
+
+@utility navbar {
+    @layer oxidt {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 4rem;
+        padding: 0.5rem;
+    }
+}
+@utility navbar-start {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 50%;
+    }
+}
+@utility navbar-center {
+    @layer oxidt {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+    }
+}
+@utility navbar-end {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 50%;
+    }
+}
+@utility hero {
+    @layer oxidt {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        background-position: center;
+        background-size: cover;
+
+        & > * {
+            grid-row-start: 1;
+            grid-column-start: 1;
+        }
+    }
+}
+@utility hero-content {
+    @layer oxidt {
+        z-index: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        max-width: 80rem;
+        padding: 1rem;
+    }
+}
+@utility footer {
+    @layer oxidt {
+        display: grid;
+        grid-auto-flow: row;
+        place-items: start;
+        gap: 2.5rem 1rem;
+        width: 100%;
+        font-size: 0.875rem;
+
+        & > * {
+            display: grid;
+            place-items: start;
+            gap: 0.5rem;
+        }
+    }
+}
+@utility footer-title {
+    @layer oxidt {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+}
+
+/* ── Collapse ── */
+
+@utility collapse {
+    @layer oxidt {
+        position: relative;
+        display: grid;
+        grid-template-rows: max-content 0fr;
+        width: 100%;
+        overflow: hidden;
+        border-radius: var(--radius-box);
+        transition: grid-template-rows 0.2s ease;
+
+        & > input:is([type="checkbox"], [type="radio"]) {
+            grid-row-start: 1;
+            grid-column-start: 1;
+            z-index: 1;
+            width: 100%;
+            min-height: 3.5rem;
+            opacity: 0;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        &:is(details) > summary {
+            list-style: none;
+        }
+        &:is(details) > summary::-webkit-details-marker {
+            display: none;
+        }
+    }
+
+    /* Tailwind's own `collapse` utility (`visibility: collapse`) is emitted
+       after this one; the doubled class outranks it. */
+    &.collapse {
+        visibility: visible;
+    }
+
+    &:is([open], .collapse-open, :focus:not(.collapse-close)),
+    &:has(> input:is([type="checkbox"], [type="radio"]):checked) {
+        grid-template-rows: max-content 1fr;
+    }
+
+    &:is([open], .collapse-open, :focus:not(.collapse-close)) > .collapse-content,
+    &:has(> input:is([type="checkbox"], [type="radio"]):checked) > .collapse-content {
+        visibility: visible;
+        padding-bottom: 1rem;
+    }
+}
+@utility collapse-title {
+    @layer oxidt {
+        position: relative;
+        grid-row-start: 1;
+        grid-column-start: 1;
+        width: 100%;
+        min-height: 3.5rem;
+        padding: 1rem 3rem 1rem 1rem;
+        cursor: pointer;
+    }
+}
+@utility collapse-content {
+    @layer oxidt {
+        grid-row-start: 2;
+        grid-column-start: 1;
+        min-height: 0;
+        padding-inline: 1rem;
+        visibility: hidden;
+        transition:
+            padding 0.2s ease,
+            visibility 0.2s;
+    }
+}
+@utility collapse-arrow {
+    & > .collapse-title::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        inset-inline-end: 1.4rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        translate: 0 -75%;
+        rotate: 45deg;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transition: rotate 0.2s ease;
+    }
+
+    &:is([open], .collapse-open, :focus:not(.collapse-close)) > .collapse-title::after,
+    &:has(> input:is([type="checkbox"], [type="radio"]):checked) > .collapse-title::after {
+        rotate: 225deg;
+        translate: 0 -25%;
+    }
+}
+
+/* ── Toast ── */
+
+@utility toast {
+    @layer oxidt {
+        position: fixed;
+        top: auto;
+        bottom: 1rem;
+        inset-inline: auto 1rem;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: max-content;
+        max-width: calc(100vw - 2rem);
+        background-color: transparent;
+    }
+}
+@utility toast-start {
+    inset-inline: 1rem auto;
+}
+@utility toast-center {
+    inset-inline: 50% auto;
+    translate: -50% 0;
+}
+@utility toast-end {
+    inset-inline: auto 1rem;
+}
+@utility toast-top {
+    top: 1rem;
+    bottom: auto;
+}
+
+/* A toast that slides in and hides itself after `--toast-delay` (5s), with no
+   script. Hovering or focusing it pauses the timer. */
+@utility toast-auto {
+    animation:
+        oxidt-toast-in 0.4s cubic-bezier(0.21, 1.02, 0.73, 1),
+        oxidt-toast-out 0.25s ease-in var(--toast-delay, 5s) forwards;
+
+    &:is(:hover, :focus-within) {
+        animation-play-state: paused;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: oxidt-toast-out 0s var(--toast-delay, 5s) forwards;
+    }
+}
+
+/* Slide-in only, for toasts that stay until closed. */
+@utility toast-enter {
+    animation: oxidt-toast-in 0.4s cubic-bezier(0.21, 1.02, 0.73, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+/* A close control without script: a label around a visually hidden checkbox.
+   Checking it removes the enclosing toast. */
+@utility toast-close {
+    @layer oxidt {
+        display: inline-grid;
+        place-items: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-inline-start: auto;
+        border-radius: var(--radius-field);
+        opacity: 0.6;
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &:has(:focus-visible) {
+            outline: 2px solid currentColor;
+            outline-offset: 1px;
+        }
+    }
+
+    :has(> & input:checked) {
+        display: none;
+    }
+}
+
+@keyframes oxidt-toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(calc(100% + 1rem)) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes oxidt-toast-out {
+    to {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateX(calc(100% + 1rem)) scale(0.95);
+    }
+}
+
+/* ── Popover ──
+   A floating panel on the native Popover API: `<button popovertarget="id">`
+   opens `<div id="id" popover class="popover">`; Escape and outside clicks
+   close it, no script. With CSS anchor positioning it sits under its trigger
+   (the trigger sets `anchor-name`, the panel `position-anchor`) and flips when
+   it would overflow; without it, the browser centres it. */
+
+@utility popover {
+    @layer oxidt {
+        min-width: 10rem;
+        max-width: min(24rem, calc(100vw - 2rem));
+        padding: 0.375rem;
+        border: 1px solid var(--color-base-300);
+        border-radius: var(--radius-box);
+        background-color: var(--color-base-100);
+        color: var(--color-base-content);
+        box-shadow:
+            0 1px 2px rgb(0 0 0 / 0.04),
+            0 12px 32px -8px rgb(0 0 0 / 0.15);
+        opacity: 0;
+        scale: 0.96;
+        transition:
+            opacity 0.15s ease,
+            scale 0.15s ease,
+            overlay 0.15s allow-discrete,
+            display 0.15s allow-discrete;
+
+        &:popover-open {
+            opacity: 1;
+            scale: 1;
+
+            @starting-style {
+                opacity: 0;
+                scale: 0.96;
+            }
+        }
+
+        @supports (position-area: block-end) {
+            inset: auto;
+            margin: 0.375rem 0;
+            position-area: block-end span-inline-end;
+            position-try-fallbacks: flip-block, flip-inline;
+            transform-origin: top;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+}
+@utility popover-end {
+    @supports (position-area: block-end) {
+        position-area: block-end span-inline-start;
+    }
+}
+@utility popover-top {
+    @supports (position-area: block-end) {
+        position-area: block-start span-inline-end;
+        transform-origin: bottom;
+    }
+}
+
+/* ── Status dot ── */
+
+@utility status {
+    @layer oxidt {
+        display: inline-block;
+        aspect-ratio: 1;
+        width: var(--status-size, 0.5rem);
+        height: var(--status-size, 0.5rem);
+        border-radius: 9999px;
+        background-color: var(
+            --status-color,
+            color-mix(in oklab, var(--color-base-content) 25%, transparent)
+        );
+        vertical-align: middle;
+    }
+}
+@utility status-primary {
+    --status-color: var(--color-primary);
+}
+@utility status-info {
+    --status-color: var(--color-info);
+}
+@utility status-success {
+    --status-color: var(--color-success);
+}
+@utility status-warning {
+    --status-color: var(--color-warning);
+}
+@utility status-error {
+    --status-color: var(--color-error);
+}
+@utility status-sm {
+    --status-size: 0.375rem;
+}
+@utility status-lg {
+    --status-size: 0.75rem;
+}
+
+/* ── Link, kbd, breadcrumbs ── */
+
+@utility link {
+    @layer oxidt {
+        color: var(--link-color, inherit);
+        text-decoration-line: underline;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+    }
+}
+@utility link-hover {
+    @layer oxidt {
+        text-decoration-line: none;
+
+        &:hover {
+            text-decoration-line: underline;
+        }
+    }
+}
+@utility link-primary {
+    --link-color: var(--color-primary);
+}
+@utility link-error {
+    --link-color: var(--color-error);
+}
+
+@utility kbd {
+    @layer oxidt {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--kbd-size, 1.5rem);
+        height: var(--kbd-size, 1.5rem);
+        padding-inline: 0.375rem;
+        border: 1px solid var(--color-base-300);
+        border-bottom-width: 2px;
+        border-radius: var(--radius-field);
+        background-color: var(--color-base-200);
+        font-family: var(--font-mono);
+        font-size: var(--kbd-fs, 0.75rem);
+        vertical-align: middle;
+    }
+}
+@utility kbd-xs {
+    --kbd-size: 1rem;
+    --kbd-fs: 0.625rem;
+}
+@utility kbd-sm {
+    --kbd-size: 1.25rem;
+    --kbd-fs: 0.6875rem;
+}
+
+@utility breadcrumbs {
+    @layer oxidt {
+        max-width: 100%;
+        padding-block: 0.5rem;
+        overflow-x: auto;
+        font-size: 0.875rem;
+
+        & > :where(ul, ol) {
+            display: flex;
+            align-items: center;
+            min-height: min-content;
+            white-space: nowrap;
+        }
+
+        & > :where(ul, ol) > li {
+            display: flex;
+            align-items: center;
+        }
+
+        & > :where(ul, ol) > li + li::before {
+            content: "";
+            display: block;
+            width: 0.375rem;
+            height: 0.375rem;
+            margin-inline: 0.625rem 0.5rem;
+            rotate: 45deg;
+            border-top: 1px solid currentColor;
+            border-right: 1px solid currentColor;
+            opacity: 0.4;
+        }
+
+        & > :where(ul, ol) > li > a:hover {
+            text-decoration-line: underline;
+        }
+    }
+}
+
+/* ── Skeleton ── */
+
+@utility skeleton {
+    @layer oxidt {
+        border-radius: var(--radius-box);
+        background-color: var(--color-base-300);
+        background-image: linear-gradient(
+            105deg,
+            transparent 0% 40%,
+            var(--color-base-200) 50%,
+            transparent 60% 100%
+        );
+        background-size: 200% auto;
+        background-position-x: -50%;
+        animation: oxidt-skeleton 1.8s ease-in-out infinite;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+}
+
+@keyframes oxidt-skeleton {
+    0% {
+        background-position: 150%;
+    }
+    100% {
+        background-position: -50%;
+    }
+}
+
+/* ── Avatar ──
+   `avatar` wraps a sized, rounded box (`<div class="w-10 rounded-full">`)
+   holding an image, or initials with `avatar-placeholder`. */
+
+@utility avatar {
+    @layer oxidt {
+        position: relative;
+        display: inline-flex;
+        vertical-align: middle;
+
+        & > div {
+            display: block;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+        }
+
+        & img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+@utility avatar-placeholder {
+    @layer oxidt {
+        & > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+@utility avatar-group {
+    @layer oxidt {
+        display: flex;
+        overflow: hidden;
+
+        & :where(.avatar) {
+            overflow: hidden;
+            border: 4px solid var(--color-base-100);
+            border-radius: 9999px;
+        }
+    }
+}
+@utility avatar-online {
+    @layer oxidt {
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            top: 7%;
+            right: 7%;
+            width: 15%;
+            height: 15%;
+            border-radius: 9999px;
+            background-color: var(--color-success);
+            outline: 2px solid var(--color-base-100);
+        }
+    }
+}
+@utility avatar-offline {
+    @layer oxidt {
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            top: 7%;
+            right: 7%;
+            width: 15%;
+            height: 15%;
+            border-radius: 9999px;
+            background-color: var(--color-base-300);
+            outline: 2px solid var(--color-base-100);
+        }
+    }
+}

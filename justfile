@@ -27,6 +27,11 @@ css:
     ./node_modules/.bin/tailwindcss -i crates/dioxus-docs-kit/tailwind.css -o crates/dioxus-docs-kit/assets/docs-kit.css --minify
     ./node_modules/.bin/tailwindcss -i crates/topcoat-docs-kit/tailwind.css -o crates/topcoat-docs-kit/assets/docs-kit.css --minify
 
+# Refresh vendor/oxidt-ui from the oxidt-ui tag pinned in the script.
+[group("dev")]
+oxidt-ui:
+    ./scripts/vendor-oxidt-ui.sh
+
 # Report the bundled web asset sizes (run after `dx bundle --web --release`)
 [group("dev")]
 size:

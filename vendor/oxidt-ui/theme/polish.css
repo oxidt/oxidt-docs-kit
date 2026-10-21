@@ -1,0 +1,326 @@
+/* ── Oxidt polish ──
+   The look on top of the components: elevation, glass, shell chrome and
+   motion. Taken from oxidt-cloud's teams-topcoat styling. */
+
+/* ── Base ── */
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    a,
+    button {
+        transition: all 0.15s ease;
+    }
+}
+
+@utility font-serif {
+    font-weight: 520;
+    letter-spacing: -0.035em;
+}
+
+/* ── Cards ──
+   `card-elevated` is the resting surface; anchor and button cards lift on
+   hover, static cards opt in with `card-hover`. */
+
+@utility card {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+    &:hover .badge {
+        transform: scale(1.05);
+    }
+
+    &:hover .icon-animate {
+        transform: rotate(-5deg) scale(1.1);
+        transition: transform 0.2s ease;
+    }
+
+    :where(a, button)&:hover {
+        transform: translateY(-3px);
+        border-color: #dcdcdc;
+        box-shadow:
+            0 1px 2px rgb(0 0 0 / 0.04),
+            0 12px 32px -8px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] :where(a, button)&:hover {
+        border-color: #3a3a3a;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+    }
+
+    [data-theme="dark"] &:where(.bg-base-200) {
+        box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+    }
+
+    :where(a, button)&:active {
+        transform: translateY(-1px);
+        transition-duration: 0.1s;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+        :where(a, button)&:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        :where(a, button)&:active {
+            transform: scale(0.98);
+        }
+    }
+}
+
+@utility card-hover {
+    &:hover {
+        transform: translateY(-3px);
+        border-color: #dcdcdc;
+        box-shadow:
+            0 1px 2px rgb(0 0 0 / 0.04),
+            0 12px 32px -8px rgb(0 0 0 / 0.1);
+    }
+
+    [data-theme="dark"] &:hover {
+        border-color: #3a3a3a;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+    }
+
+    &:active {
+        transform: translateY(-1px);
+        transition-duration: 0.1s;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+        &:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}
+
+@utility card-elevated {
+    border: 1px solid var(--color-base-300);
+    border-radius: var(--radius-box);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+/* ── Buttons ── */
+
+@utility btn-strong {
+    --btn-border: var(--color-primary);
+    font-weight: 500;
+
+    &:hover {
+        opacity: 0.86;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .btn-circle {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* ── Shell ──
+   Flat paper: a plain base fill, with the sidebar one step darker. */
+
+@utility admin-shell {
+    min-height: 100vh;
+    background: var(--color-base-100);
+
+    & .drawer-content {
+        background: transparent;
+    }
+
+    & .drawer-side > aside {
+        background: color-mix(in srgb, var(--color-base-200) 95%, transparent);
+        backdrop-filter: blur(8px);
+    }
+}
+
+@utility glass-panel {
+    background: color-mix(in srgb, var(--color-base-100) 85%, transparent);
+    backdrop-filter: blur(8px);
+}
+
+@utility nav-link {
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    gap: 0.6rem;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+
+    &:hover {
+        background: color-mix(in srgb, var(--color-base-300) 60%, transparent);
+    }
+
+    &.active {
+        background: var(--color-base-300);
+        color: var(--color-base-content);
+    }
+}
+
+/* ── Modals ── */
+
+@utility modal-polished {
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-base-300) 70%, transparent);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.4);
+}
+
+@utility modal-backdrop {
+    background: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(6px);
+}
+
+/* ── Tables ── */
+
+@utility table-wrap {
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-base-300) 70%, transparent);
+    background: color-mix(in srgb, var(--color-base-200) 96%, transparent);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    overflow: hidden;
+}
+
+@utility table-polished {
+    & thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: color-mix(in srgb, var(--color-base-200) 96%, transparent);
+        backdrop-filter: blur(6px);
+    }
+
+    & tbody tr {
+        transition:
+            background 160ms ease,
+            box-shadow 160ms ease;
+    }
+
+    & tbody tr:hover {
+        background: var(--color-base-200);
+    }
+}
+
+/* ── Empty state ── */
+
+@utility empty-state {
+    border-radius: 1.5rem;
+    border: 1px dashed color-mix(in srgb, var(--color-base-300) 70%, transparent);
+    background: var(--color-base-200);
+}
+
+/* ── Auth pages ──
+   Hooks for oxidt-auth's LocalLoginPage and other standalone forms: a dotted
+   backdrop and a glass card. */
+
+@utility auth-bg {
+    background:
+        radial-gradient(
+                color-mix(in oklab, var(--color-base-content) 14%, transparent) 1px,
+                transparent 1.2px
+            )
+            0 0 / 22px 22px,
+        var(--color-base-100);
+}
+
+@utility auth-card {
+    background: color-mix(in oklab, var(--color-base-200) 60%, transparent);
+    backdrop-filter: blur(24px);
+    border: 1px solid color-mix(in oklab, var(--color-base-300) 50%, transparent);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+/* ── Motion ── */
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes toast-in {
+    from {
+        transform: translateX(calc(100% + 1rem)) scale(0.97);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out {
+    from {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(calc(100% + 1rem)) scale(0.95);
+        opacity: 0;
+    }
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@utility animate-fade-up {
+    animation: fade-up 0.4s ease-out both;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@utility animate-toast-in {
+    animation: toast-in 0.4s cubic-bezier(0.21, 1.02, 0.73, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@utility animate-toast-out {
+    animation: toast-out 0.25s ease-in forwards;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        opacity: 0;
+    }
+}
+
+@utility skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        oklch(0.5 0 0 / 0.12) 25%,
+        oklch(0.5 0 0 / 0.22) 50%,
+        oklch(0.5 0 0 / 0.12) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 0.25rem;
+}
+
+@utility safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}

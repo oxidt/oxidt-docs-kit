@@ -5,7 +5,6 @@
   "devDependencies": {
     "@playwright/test": "1.64.0",
     "@tailwindcss/cli": "4.1.18",
-    "daisyui": "^5.5.18",
     "pele": "1.6.0",
     "tailwindcss": "4.1.18"
   },

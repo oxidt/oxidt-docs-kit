@@ -14,9 +14,10 @@
 @import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
 
-@plugin "daisyui" {
-    themes: dark --default, light;
-}
+/* oxidt-ui's monochrome tokens and daisyUI-compatible component
+   classes; no daisyUI plugin needed. */
+@import "../../vendor/oxidt-ui/theme/tokens.css";
+@import "../../vendor/oxidt-ui/theme/components.css";
 
 @source "./src/**/*.rs";
 /* Badge classes chosen in match arms (`HttpMethod::badge_class()`,

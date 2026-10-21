@@ -70,6 +70,11 @@ jobs:
       # The crate ships a precompiled stylesheet (DOCS_KIT_CSS). Fail if the
       # committed output is stale relative to its input/sources (`just css`).
       # Uses the lockfile-pinned binary, not bunx, so local and CI output match.
+      - name: Check vendored oxidt-ui matches its pinned tag
+        run: |
+          ./scripts/vendor-oxidt-ui.sh
+          git diff --exit-code vendor/oxidt-ui
+          test -z "$(git status --porcelain vendor/oxidt-ui)"
       - name: Check precompiled kit CSS is fresh
         run: |
           ./node_modules/.bin/tailwindcss -i crates/dioxus-docs-kit/tailwind.css -o crates/dioxus-docs-kit/assets/docs-kit.css --minify

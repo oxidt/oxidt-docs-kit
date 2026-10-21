@@ -9,6 +9,13 @@ apply to all six crates (`dioxus-docs-kit`, `dioxus-docs-kit-build`,
 
 ### Changed
 
+- **Monochrome default look, no daisyUI.** The precompiled stylesheets now
+  use oxidt-ui's daisyUI-compatible component classes and its monochrome
+  tokens (ink on white, inverted for dark) instead of the daisyUI plugin and
+  its stock palette; they are about 22% smaller gzipped. Without a
+  `data-theme` attribute the kit now follows the OS colour scheme instead of
+  defaulting to dark; set `data-theme="dark"` on `<html>` to keep the old
+  default. MDX cards use a white surface with a border.
 - **Project renamed to oxidt-docs-kit.** The site, README and docs now use the
   new name. Published crate names (`dioxus-docs-kit`, `dioxus-docs-kit-build`,
   `dioxus-mdx`, `hl-lite`) are unchanged.

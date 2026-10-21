@@ -133,7 +133,7 @@ async fn card_grid(cards: &[CardNode], cols: u8, base_path: &str) -> Result<impl
 #[component]
 async fn card_item(card: &CardNode, base_path: &str) -> Result<impl View> {
     let body = view! {
-        <div class="not-prose bg-base-300 hover:border-primary/50 transition-colors duration-150 border border-base-content/10 rounded-lg h-full">
+        <div class="not-prose bg-base-100 hover:border-primary/50 transition-colors duration-150 border border-base-300 rounded-lg h-full">
             <div class="p-6">
                 if let Some(name) = &card.icon {
                     <div class="text-primary mb-5">icon(glyph: icon_for_name(name), class: "size-6")</div>

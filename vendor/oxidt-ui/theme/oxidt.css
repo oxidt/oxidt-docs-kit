@@ -1,0 +1,14 @@
+/* Oxidt UI theme: tokens, components and polish.
+
+   Import it after Tailwind in the app's Tailwind input:
+
+       @import "tailwindcss";
+       @import "<path to oxidt-ui>/theme/oxidt.css";
+       @source "./src";
+
+   It needs no Node packages: the standalone Tailwind CLI that topcoat-tailwind
+   downloads compiles it. Fonts (Geist, Newsreader) are the app's to serve. */
+
+@import "./tokens.css";
+@import "./components.css";
+@import "./polish.css";

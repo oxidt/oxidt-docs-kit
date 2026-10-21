@@ -1,9 +1,10 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@plugin "daisyui" {
-    themes: dark --default, light;
-}
+/* oxidt-ui's monochrome tokens and daisyUI-compatible component
+   classes; no daisyUI plugin needed. */
+@import "./vendor/oxidt-ui/theme/tokens.css";
+@import "./vendor/oxidt-ui/theme/components.css";
 
 @source "./src/**/*.{rs,html,css}";
 @source "./crates/**/*.{rs,html,css}";
@@ -14,16 +15,6 @@
 /* Base --dk-* token surface from dioxus-docs-kit. The runtime theme picker in
    src/main.rs overrides these via an inline <style id="dk-theme-preset">. */
 @import "./crates/dioxus-docs-kit/theme.css";
-
-/* Brand override: swap DaisyUI's default blue primary for a rusty orange. */
-:root,
-[data-theme="dark"],
-[data-theme="light"] {
-    --color-primary: #d47731;
-    --color-primary-content: #fff7f0;
-    --p: #d47731;
-    --pc: #fff7f0;
-}
 
 /* For git/crates.io dependency users who can't use @source on crate paths, use:
    @source "./safelist.html";

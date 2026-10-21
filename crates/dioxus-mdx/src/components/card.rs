@@ -62,7 +62,7 @@ pub fn DocCard(props: DocCardProps) -> Element {
     let html = props.card.content_html.clone();
 
     let card_content = rsx! {
-        div { class: "not-prose bg-base-300 hover:border-primary/50 transition-colors duration-150 border border-base-content/10 rounded-lg h-full",
+        div { class: "not-prose bg-base-100 hover:border-primary/50 transition-colors duration-150 border border-base-300 rounded-lg h-full",
             div { class: "p-6",
                 // Icon on top
                 if let Some(icon) = &props.card.icon {
