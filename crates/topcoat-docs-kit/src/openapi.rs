@@ -32,7 +32,7 @@ pub(crate) async fn endpoint_page(
 
     Ok(view! {
         <div class="flex flex-col lg:flex-row gap-0">
-            <div class="flex-1 min-w-0 px-8 py-12 lg:px-12">
+            <div class="flex-1 min-w-0 px-6 py-12 lg:px-12">
                 <div class="max-w-2xl">
                     <div class="flex items-center gap-3 mb-6">
                         <span class=(format!("px-3 py-1.5 rounded-lg font-mono text-sm font-bold border {}", op.method.bg_class()))>
@@ -49,8 +49,8 @@ pub(crate) async fn endpoint_page(
                     if let Some(desc) = &op.description {
                         <p class="text-base text-base-content/70 mb-6 leading-relaxed">(desc.as_str())</p>
                     }
-                    <div class="mb-8 flex items-center gap-2">
-                        <span class="text-xs text-base-content/50 font-semibold uppercase tracking-wider">"Base URL"</span>
+                    <div class="mb-8 flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2">
+                        <span class="text-xs text-base-content/60 font-semibold uppercase tracking-wider">"Base URL"</span>
                         <code class="text-sm font-mono text-base-content/70 bg-base-200 px-2 py-1 rounded break-all">(base_url)</code>
                     </div>
                     if !op.parameters.is_empty() {
@@ -212,12 +212,16 @@ async fn response_item(response: &ApiResponse) -> Result<impl View> {
     Ok(view! {
         if response.content.is_empty() {
             <div class="border border-base-300 rounded-lg overflow-hidden">
-                <div class="w-full flex items-center gap-3 px-3 py-2">(header)</div>
+                <div class="w-full flex items-center gap-3 px-3 py-2">
+                    // Empty chevron slot keeps the badges in one column.
+                    <span class="size-4 shrink-0" aria-hidden="true"></span>
+                    (header)
+                </div>
             </div>
         } else {
             <details class="group border border-base-300 rounded-lg overflow-hidden">
                 <summary class="w-full flex items-center gap-3 px-3 py-2 text-left cursor-pointer list-none [&::-webkit-details-marker]:hidden hover:bg-base-200 transition-colors">
-                    icon(glyph: LdChevronRight, class: "size-4 text-base-content/50 transition-transform group-open:rotate-90")
+                    icon(glyph: LdChevronRight, class: "size-4 shrink-0 text-base-content/50 transition-transform group-open:rotate-90")
                     (header)
                 </summary>
                 <div class="border-t border-base-300 bg-base-200/30">

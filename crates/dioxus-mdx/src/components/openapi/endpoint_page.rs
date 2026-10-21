@@ -60,7 +60,7 @@ pub fn EndpointPage(props: EndpointPageProps) -> Element {
     rsx! {
         div { class: "flex flex-col lg:flex-row gap-0",
             // Left column — scrollable content
-            div { class: "flex-1 min-w-0 px-8 py-12 lg:px-12",
+            div { class: "flex-1 min-w-0 px-6 py-12 lg:px-12",
                 div { class: "max-w-2xl",
                     // Method + Path header
                     div { class: "flex items-center gap-3 mb-6",
@@ -91,8 +91,8 @@ pub fn EndpointPage(props: EndpointPageProps) -> Element {
                     }
 
                     // Base URL
-                    div { class: "mb-8 flex items-center gap-2",
-                        span { class: "text-xs text-base-content/50 font-semibold uppercase tracking-wider",
+                    div { class: "mb-8 flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2",
+                        span { class: "text-xs text-base-content/60 font-semibold uppercase tracking-wider",
                             "Base URL"
                         }
                         // `break-all`: a base URL is one unbreakable token and

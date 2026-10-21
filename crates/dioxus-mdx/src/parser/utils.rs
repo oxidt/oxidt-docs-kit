@@ -133,6 +133,12 @@ fn parse_opening_fence(text: &str) -> Option<(char, Option<&str>, Option<&str>)>
         return None;
     }
     let filename = rest.trim_start_matches([' ', '\t']);
+    // Docusaurus and Nextra spell Mintlify's bare `main.rs` as
+    // `filename="main.rs"` or `title="main.rs"`; show just the name.
+    let filename = ["filename=", "title="]
+        .iter()
+        .find_map(|key| filename.strip_prefix(key))
+        .map_or(filename, |value| value.trim().trim_matches(['"', '\'']));
 
     Some((
         marker,
@@ -416,6 +422,26 @@ mod tests {
     #[test]
     fn skip_to_next_tag_handles_empty_input() {
         assert_eq!(skip_to_next_tag("", "<Card"), None);
+    }
+
+    #[test]
+    fn opening_fence_reads_bare_and_keyed_filenames() {
+        for line in [
+            "```rust main.rs",
+            "```rust filename=\"main.rs\"",
+            "```rust title='main.rs'",
+        ] {
+            assert_eq!(
+                parse_opening_fence(line),
+                Some(('`', Some("rust"), Some("main.rs"))),
+                "line: {line}"
+            );
+        }
+        // Code group tab labels are plain text and keep their spaces.
+        assert_eq!(
+            parse_opening_fence("```rust Basic Usage"),
+            Some(('`', Some("rust"), Some("Basic Usage")))
+        );
     }
 
     #[test]

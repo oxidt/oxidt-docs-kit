@@ -207,7 +207,7 @@ pub fn DocsLayout(
                     } else {
                         // Default minimal header
                         div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
-                            div { class: "flex-1 gap-2",
+                            div { class: "flex-1 flex items-center gap-2 min-w-0",
                                 button {
                                     class: "btn btn-ghost btn-square lg:btn-sm lg:hidden",
                                     "aria-label": "Open navigation",
@@ -225,7 +225,8 @@ pub fn DocsLayout(
                     // Tab bar (below header)
                     if has_tabs {
                         div { class: "dk-tabs bg-base-200/80 backdrop-blur border-b border-base-300 px-4 lg:px-8",
-                            div { class: "flex gap-6",
+                            // Scroll rather than wrap: a two-line tab breaks the bar.
+                            div { class: "flex gap-6 overflow-x-auto overflow-y-hidden [scrollbar-width:none]",
                                 for tab in nav.tabs.iter() {
                                     {
                                         let is_active = *tab == active_tab();
@@ -237,7 +238,7 @@ pub fn DocsLayout(
                                         };
                                         rsx! {
                                             button {
-                                                class: "dk-tab px-1 py-2.5 text-sm transition-colors -mb-px {style}",
+                                                class: "dk-tab shrink-0 whitespace-nowrap px-1 py-2.5 text-sm transition-colors -mb-px {style}",
                                                 onclick: move |_| {
                                                     active_tab.set(tab_clone.clone());
                                                     let groups = nav.groups_for_tab(&tab_clone);
@@ -296,7 +297,7 @@ pub fn SearchButton(search_open: Signal<bool>) -> Element {
 
     rsx! {
         button {
-            class: "dk-search-trigger btn btn-ghost gap-2 lg:btn-sm",
+            class: "dk-search-trigger btn btn-ghost gap-2 px-3 lg:btn-sm",
             r#type: "button",
             aria_label: "Search",
             aria_haspopup: "dialog",

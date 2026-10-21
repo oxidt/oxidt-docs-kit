@@ -31,10 +31,13 @@
     background: transparent;
 }
 
+/* An inset, rounded ring: with a monochrome primary a full-width 2px outline
+   outshouted the results it was marking. */
 .dk-search-result[data-active="true"] {
     background: var(--dk-accent-soft, color-mix(in srgb, var(--color-primary, #2563eb) 10%, transparent));
-    outline: 2px solid var(--dk-accent, var(--color-primary, #2563eb));
-    outline-offset: -2px;
+    border-radius: 0.75rem;
+    outline: 1px solid color-mix(in srgb, var(--dk-accent, var(--color-primary, #2563eb)) 45%, transparent);
+    outline-offset: -4px;
 }
 
 .dk-root,

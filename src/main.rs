@@ -255,7 +255,7 @@ fn ThemePresetPicker() -> Element {
             div {
                 tabindex: "0",
                 role: "button",
-                class: "btn btn-ghost gap-2 lg:btn-sm",
+                class: "btn btn-ghost gap-2 px-3 lg:btn-sm",
                 "aria-label": "Theme preset",
                 Icon { class: "size-4", icon: LdPalette }
                 span { class: "hidden sm:inline text-sm", "Preset" }
@@ -361,7 +361,7 @@ fn SiteNavbar(
         div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
             // `min-w-0` + `truncate`: without them the brand refuses to shrink
             // and pushes the toggles off a 390px viewport.
-            div { class: "flex-1 gap-2 min-w-0",
+            div { class: "flex-1 flex items-center gap-2 min-w-0",
                 if let Some(mut drawer) = drawer_open {
                     button {
                         class: "btn btn-ghost btn-square lg:btn-sm lg:hidden docs-menu-btn",

@@ -38,7 +38,7 @@ pub async fn docs_page(registry: &DocsRegistry, base_path: &str, path: &str) -> 
                 Some((operation, spec)) => {
                     <div class="dk-endpoint flex flex-col">
                         endpoint_page(operation: operation, spec: spec)
-                        <main class="px-8 lg:px-12 pb-12 lg:w-[55%]">
+                        <main class="px-6 lg:px-12 pb-12 lg:w-[55%]">
                             <div class="max-w-2xl">
                                 let (prev, next) = registry.page_neighbors(path);
                                 page_nav(registry: registry, base_path: base_path, prev: prev.as_deref(), next: next.as_deref())
@@ -88,7 +88,7 @@ async fn frame(
     Ok(view! {
         <div class="dk-root dk-docs-root min-h-screen bg-base-100">
             <div class="dk-header sticky top-0 z-50 flex items-center gap-4 bg-base-200/80 backdrop-blur border-b border-base-300 px-4 lg:px-8">
-                <div class="dk-tabs flex flex-1 min-w-0 gap-6 overflow-x-auto">
+                <div class="dk-tabs flex flex-1 min-w-0 gap-6 overflow-x-auto overflow-y-hidden [scrollbar-width:none]">
                     for tab in &registry.nav.tabs {
                         let first = registry.nav.groups_for_tab(tab).first().and_then(|g| g.pages.first()).cloned().unwrap_or_default();
                         let is_active = active_tab.as_ref() == Some(tab);

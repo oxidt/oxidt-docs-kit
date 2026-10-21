@@ -58,12 +58,15 @@ pub fn ResponseItem(props: ResponseItemProps) -> Element {
                     }
                 },
 
-                // Expand icon
+                // Expand icon; rows without content keep the slot empty so
+                // every status badge starts in the same column.
                 if has_content {
                     Icon {
-                        class: if is_expanded() { "size-4 text-base-content/50 transform rotate-90 transition-transform" } else { "size-4 text-base-content/50 transition-transform" },
+                        class: if is_expanded() { "size-4 shrink-0 text-base-content/50 transform rotate-90 transition-transform" } else { "size-4 shrink-0 text-base-content/50 transition-transform" },
                         icon: LdChevronRight
                     }
+                } else {
+                    span { class: "size-4 shrink-0", "aria-hidden": "true" }
                 }
 
                 // Status code badge

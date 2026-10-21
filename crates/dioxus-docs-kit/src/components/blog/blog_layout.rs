@@ -48,7 +48,7 @@ pub fn BlogLayout(
                         {hdr}
                     } else {
                         div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
-                            div { class: "flex-1 gap-2",
+                            div { class: "flex-1 flex items-center gap-2 min-w-0",
                                 button {
                                     class: "btn btn-ghost btn-sm btn-square lg:hidden",
                                     "aria-label": "Open navigation",
