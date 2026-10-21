@@ -2,13 +2,13 @@
 //!
 //! Documentation site shell for [Topcoat](https://github.com/tokio-rs/topcoat)
 //! apps, on the same build-time content pipeline as `dioxus-docs-kit`: write
-//! MDX + `_nav.json`, let `dioxus-docs-kit-build` bundle it in `build.rs`, and
+//! MDX + `_nav.json`, let `oxidt-docs-kit-build` bundle it in `build.rs`, and
 //! render it here with server-side components. No runtime script is required —
 //! tabs, accordions and copy buttons work in plain HTML.
 //!
 //! ```rust,ignore
 //! // build.rs
-//! dioxus_docs_kit_build::DocsBuild::new("docs/_nav.json").generate();
+//! oxidt_docs_kit_build::DocsBuild::new("docs/_nav.json").generate();
 //! ```
 //!
 //! ```rust,ignore
@@ -39,7 +39,7 @@
 //! to serve the bundled diagram modules from your own app.
 //!
 //! The blog (`blog_*_page` / `blog_*_head`) renders a `BlogRegistry` from
-//! `dioxus_docs_kit_build::BlogBuild`, with filters and pagination as plain
+//! `oxidt_docs_kit_build::BlogBuild`, with filters and pagination as plain
 //! links; see the `topcoat-docs` example for its routes.
 //!
 //! Search is a plain GET form: the header's search box submits to

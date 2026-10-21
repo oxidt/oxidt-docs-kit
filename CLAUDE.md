@@ -5,229 +5,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Dev Commands
 
 ```sh
-dx serve                    # Dev server with hot reload
-dx build --release          # Production build
-dx bundle --web --release --debug-symbols false   # Bundle for deployment (without the flag wasm-opt aborts on DWARF and dx ships the unoptimized wasm)
+cargo run -p topcoat-docs-example   # Topcoat example site (sample content in docs/ and blog/)
+just css                            # Rebuild topcoat-docs-kit's precompiled stylesheet
+just oxidt-ui                       # Re-vendor oxidt-ui from the tag pinned in scripts/vendor-oxidt-ui.sh
 ```
 
 **Linting & testing (matches CI):**
 ```sh
-cargo fmt --all --check     # Format check
+cargo fmt --all --check
 cargo clippy --workspace --all-targets --all-features -- -D warnings
-cargo machete               # Unused dependency check
-cargo test --workspace      # Run all tests
+cargo machete
+cargo test --workspace
 ```
 
-**Tailwind CSS generation** (required before clippy/test if `assets/tailwind.css` is missing):
-```sh
-bun install --frozen-lockfile
-bunx @tailwindcss/cli -i tailwind.css -o assets/tailwind.css
-```
-
-**Shortcuts via justfile:** `just build`, `just test`, `just serve`
-
-Requires Dioxus CLI (`dx`): `curl -sSL http://dioxus.dev/install.sh | sh`
+**Shortcuts via justfile:** `just build`, `just test`, `just serve`, `just check`
 
 ## Project Architecture
 
-**oxidt-docs-kit** (formerly dioxus-docs-kit) — **Rust documentation site framework** with a Dioxus 0.7 shell — renders MDX docs, OpenAPI API reference pages, and a search modal. All content is embedded at compile time.
+**oxidt-docs-kit** — Rust documentation site framework: Mintlify-style MDX, OpenAPI reference pages, search. All content is parsed at build time and embedded. The shell is Topcoat (server-rendered, no runtime script) styled with oxidt-ui.
+
+The Dioxus + DaisyUI shell (`dioxus-docs-kit`, the `dioxus-mdx` renderer, the Dioxus example site) lives in a separate repo, [hauju/dioxus-docs-kit](https://github.com/hauju/dioxus-docs-kit), and consumes the pipeline crates below from crates.io. Changes to the bundle format or `oxidt-docs-kit-core`'s API reach it only through a release.
 
 ### Crate Layout
 
 | Crate | Path | Purpose |
 |-------|------|---------|
-| `dioxus-docs-kit-example` | `src/main.rs` | Example app: routes, custom pages (Home, Blog, Navbar), docs glue |
-| `dioxus-docs-kit` | `crates/dioxus-docs-kit/` | **Reusable docs shell** — layout, sidebar, search, page nav, theme toggle, OpenAPI |
-| `oxidt-docs-kit-core` | `crates/oxidt-docs-kit-core/` | **UI-agnostic core** — bundle loader, `DocsRegistry`/`BlogRegistry`, configs, search, SEO/XML helpers. No `dioxus` dep; the kit re-exports it at its old paths |
-| `dioxus-docs-kit-build` | `crates/dioxus-docs-kit-build/` | Build-time pipeline: parses `_nav.json` + all MDX + OpenAPI into one JSON bundle |
-| `dioxus-mdx` | `crates/dioxus-mdx/` | Standalone MDX parser + renderer (Mintlify-style components) |
-| `topcoat-docs-kit` | `crates/topcoat-docs-kit/` | **Topcoat docs shell** (experimental) — server-rendered `docs_page`/`docs_head`/`doc_content` on `oxidt-docs-kit-core`, no runtime script; own precompiled CSS. Rust 1.98. Example: `examples/topcoat-docs` (`cargo run -p topcoat-docs-example`) |
-| `hl-lite` | `crates/hl-lite/` | Zero-dependency syntax highlighter (12 hand-written lexers → `hl-*` spans); used by `dioxus-mdx`'s code blocks |
+| `topcoat-docs-kit` | `crates/topcoat-docs-kit/` | **Topcoat docs shell** (experimental) — server-rendered `docs_page`/`docs_head`/`doc_content`; own precompiled CSS. Rust 1.98. Example: `examples/topcoat-docs` |
+| `oxidt-docs-kit-core` | `crates/oxidt-docs-kit-core/` | **UI-agnostic core** — bundle loader, `DocsRegistry`/`BlogRegistry`/`SkillsRegistry`, configs, search, SEO/XML helpers. Renders nothing |
+| `oxidt-docs-kit-build` | `crates/oxidt-docs-kit-build/` | Build-time pipeline: parses `_nav.json` + all MDX + OpenAPI into one JSON bundle |
+| `oxidt-mdx` | `crates/oxidt-mdx/` | MDX parser + document types, Lucide icon data, bundled Pele diagram assets. No UI framework |
+| `hl-lite` | `crates/hl-lite/` | Zero-dependency syntax highlighter (12 hand-written lexers → `hl-*` spans) |
+| `oxidt-docs` | `crates/oxidt-docs/` | Static site generator (unpublished) |
 
-**Dependency direction:** `dioxus-docs-kit` depends on `oxidt-docs-kit-core` (which depends on `dioxus-mdx` with no features — types only) and on `dioxus-mdx` with `features = ["components"]` (renderer only). `dioxus-docs-kit-build` depends on `dioxus-mdx` with `default-features = false, features = ["parse", "openapi-parse"]` (parser only, no dioxus). The mdx and docs-kit crates use `dioxus = { features = ["lib"] }` (NOT fullstack). Only the root example uses fullstack.
+**Dependency direction:** `topcoat-docs-kit` → `oxidt-docs-kit-core` → `oxidt-mdx` (no features, types only). `oxidt-docs-kit-build` → `oxidt-mdx` with `features = ["parse", "openapi-parse"]`. Keep `oxidt-mdx` and `oxidt-docs-kit-core` buildable with `--no-default-features` and on Rust 1.88: `dioxus-docs-kit`'s wasm client links them that way.
 
 ### Content Pipeline
 
-**All parsing happens at build time.** The wasm client links no MDX parser, no `markdown`, no `regex`/`regex-lite`, no `openapiv3` and no `serde_yaml` — it only runs `serde_json` over the bundle, once.
+1. `build.rs` calls `oxidt_docs_kit_build::DocsBuild::new("docs/_nav.json").with_openapi(prefix, spec_path).generate()` (and `BlogBuild::new("blog/_blog.json")`, `SkillsBuild::new("skills/_skills.json")`)
+2. The build crate parses every `.mdx` into `Vec<DocNode>` with prose rendered to HTML (`DocNode::Html`), parses the OpenAPI spec into `OpenApiSpec`, builds the section-level search index and writes `$OUT_DIR/docs_bundle.json` / `blog_bundle.json`. `cargo:rerun-if-changed` is emitted per file.
+3. `docs_bundle!()` / `blog_bundle!()` / `skills_bundle!()` embed the JSON with `include_str!`
+4. `DocsConfig::new(docs_bundle!()).build()` creates a `DocsRegistry` — it deserializes the bundle and derives only the cheap runtime bits (API sidebar entries, operation index, blog categories)
 
-1. `build.rs` calls `dioxus_docs_kit_build::DocsBuild::new("docs/_nav.json").with_openapi(prefix, spec_path).generate()` (and `BlogBuild::new("blog/_blog.json").generate()`)
-   - `SkillsBuild::new("skills/_skills.json").generate()` reads `skills/<name>/SKILL.md` (frontmatter via `serde_yaml`) into `skills_bundle.json`
-2. The build crate reads `_nav.json`, parses every `.mdx` into `Vec<DocNode>` with prose rendered to HTML (`DocNode::Html`), parses the OpenAPI spec into `OpenApiSpec`, builds the section-level search index (lowercase fields included) and writes `$OUT_DIR/docs_bundle.json` / `blog_bundle.json`. `cargo:rerun-if-changed` is emitted per file.
-3. `docs_bundle!()` / `blog_bundle!()` macros embed the JSON with `include_str!`
-   - `skills_bundle!()` → `SkillsConfig::new(..).build()` → `SkillsRegistry` (rendered by `SkillsLayout`/`SkillsIndex`/`SkillPage`)
-4. `DocsConfig::new(docs_bundle!()).build()` creates a `DocsRegistry` — it deserializes the bundle (inside the consumer's `LazyLock`, so on first page render) and derives only the cheap runtime bits (API sidebar entries, operation index, blog categories)
-5. `DocsPageContent` checks `registry.get_api_operation(&path)` first, then falls back to `registry.get_parsed_doc(&path)`
+The bundle carries a `version` field (`BUNDLE_VERSION`, mirrored in `crates/oxidt-docs-kit-core/src/bundle.rs` and `crates/oxidt-docs-kit-build/src/bundle.rs`); bump it whenever the layout changes incompatibly. The build crate's `bundle.rs` holds serialize-only mirrors of `SearchEntry`, `BlogPost`, `BlogFrontmatter` and `BlogSearchEntry` — the core and kit tests dev-depend on the build crate and generate real bundles, which is what keeps the two definitions in sync.
 
-The bundle carries a `version` field (`BUNDLE_VERSION`, mirrored in `crates/oxidt-docs-kit-core/src/bundle.rs` and `crates/dioxus-docs-kit-build/src/bundle.rs`); bump it whenever the layout changes incompatibly. The build crate's `bundle.rs` holds serialize-only mirrors of `SearchEntry`, `BlogPost`, `BlogFrontmatter` and `BlogSearchEntry` — the core and kit tests dev-depend on the build crate and generate real bundles, which is what keeps the two definitions in sync.
-
-**Adding a new doc page:** create `docs/<group>/<slug>.mdx` and add the path to `docs/_nav.json`.
-
-### `_nav.json` Structure
-
-```json
-{
-  "tabs": ["Docs", "Guides", "API Reference", "Changelog"],
-  "groups": [
-    { "group": "Getting Started", "tab": "Docs", "pages": ["getting-started/introduction"] }
-  ]
-}
-```
-
-- `tabs`: displayed in the tab bar above the sidebar
-- `groups[].tab`: which tab a sidebar group belongs to (optional)
-- `groups[].pages`: paths relative to `docs/`, without `.mdx` extension
-
-### Routing Pattern
-
-```
-Route enum (main.rs):
-  #[layout(Navbar)]        → Home (/), Blog (/blog/:id)
-  #[layout(MyDocsLayout)]  → DocsIndex (/docs), DocsPage (/docs/:..slug)
-```
-
-- `MyDocsLayout` creates a `DocsContext` and calls `use_docs_providers(&DOCS, docs_ctx)` — one-call context setup
-- `/docs/:..slug` is a catch-all; slug `Vec<String>` joined with `/` resolves content
-- API endpoint slugs are kebab-cased from camelCase operationIds
-
-### Key Types (dioxus-docs-kit)
-
-- **`DocsConfig`** — Builder: `.new(docs_bundle!())` → `.with_theme_toggle()` → `.with_default_path()` → `.with_api_group_name()` → `.build()`. Content and OpenAPI specs come from the bundle, so they are configured in `build.rs`, not here
-- **`DocsRegistry`** — Holds parsed docs, nav config, search index, OpenAPI specs. Key methods: `get_parsed_doc()`, `search_docs()`, `search_hits()` (display-ready `DocsHit`s, shared by both kits), `page_neighbors()`, `get_api_operation()`, `get_api_sidebar_entries()`, `tab_for_path()`, `generate_llms_txt()`, `generate_llms_full_txt()`
-- **`DocsContext`** — Route decoupling bridge (`current_path`, `base_path`, `navigate` callback). Consumer provides this so library components don't depend on the consumer's Route enum
-- **`use_docs_providers(registry, docs_ctx)`** → returns `DocsProviders { search_open, drawer_open }` for use in custom headers
-- **UI components** — `DocsLayout`, `DocsPageContent`, `DocsSidebar`, `SearchModal`, `SearchButton`, `DocsPageNav`, `MobileDrawer`, `ThemeToggle`
-- **`docs_bundle!()` / `blog_bundle!()`** — Macros that `include_str!` the build script's `$OUT_DIR/docs_bundle.json` / `blog_bundle.json`
+**Adding a new doc page:** create `docs/<group>/<slug>.mdx` and add the path to `docs/_nav.json` (`tabs`, `groups[].tab`, `groups[].pages` relative to `docs/` without `.mdx`).
 
 ### Styling
 
-- **Tailwind CSS 4** + **DaisyUI 5** (dark theme default, light theme available)
-- `@tailwindcss/typography` for prose content
-- Input: `tailwind.css` → processed by `@tailwindcss/cli`
-- Icons: Lucide SVGs vendored in `crates/dioxus-mdx/src/lucide.rs` — `Icon { class, icon: LdX }`,
-  re-exported as `dioxus_docs_kit::lucide`. Regenerate with `scripts/vendor-lucide-icons.py`
-  after adding a new `Ld*` name; nothing generates it at build time
-- **Code block colors**: thirteen `--dk-hl-*` tokens in `crates/dioxus-docs-kit/theme.css`,
-  each a `light-dark()` pair (GitHub Light / Tokyo Night) that follows the DaisyUI
-  theme's `color-scheme`. The `.hl-*` rules need no safelist entry — they are plain
-  CSS, not Tailwind utilities. Rebuild the precompiled sheets (both kits) with `just css`. Both inputs use `@import "tailwindcss" source(none)` + explicit `@source`s: the automatic repo-wide scan leaks classes from prose (a CHANGELOG mention of "radio" once pulled in DaisyUI's radio styles)
-- **Safelist pattern**: when crates are git/crates.io deps, Tailwind can't scan `~/.cargo/` — ship `safelist.html` files with all CSS classes (especially dynamic ones from match arms like `HttpMethod::badge_class()`)
+- `crates/topcoat-docs-kit/tailwind.css` → precompiled `assets/docs-kit.css` (`just css`, CI checks freshness). Tailwind 4 + `@tailwindcss/typography`, oxidt-ui tokens/components from `vendor/oxidt-ui` (do not edit; bump the tag and run `just oxidt-ui`)
+- The input uses `@import "tailwindcss" source(none)` + explicit `@source`s: the automatic repo-wide scan leaks classes from prose
+- **Code block colors**: thirteen `--dk-hl-*` tokens in `crates/topcoat-docs-kit/theme.css`, each a `light-dark()` pair. Colors are CSS, never Rust; an unknown language renders the same markup with no spans
+- Icons: Lucide SVG data in `crates/oxidt-mdx/src/lucide.rs`. Regenerate with `scripts/vendor-lucide-icons.py` after adding a new `Ld*` name
 
 ### Key Conventions
 
-- Components use `#[component]` macro with owned prop types (`String`, `Vec`, `Signal`)
-- `use_signal()` for local state, `use_context_provider()` for shared state
-- Syntax highlighting: `hl-lite`, always on — no feature, no grammar selection, no C toolchain. `dioxus-mdx`'s `code_block` lexes the fence and emits `<pre class="dk-code">` with one `<span class="hl-{kind}">` per token; colors are the `--dk-hl-*` CSS tokens in `crates/dioxus-docs-kit/theme.css`, never Rust. An unknown language renders the same markup with no spans
-- Cargo features (docs-kit): `default = ["web", "mermaid", "openapi"]`, plus `server` (SeoRouter/Axum routes) and `webmcp`. `openapi` gates the API-reference rendering path only — the spec parser lives in the build crate. The workspace `dioxus` dep is `default-features = false`; the example enables `launch`/`devtools`/`logger` itself
-- Cargo features (dioxus-mdx): `components` gates `src/components/**` and pulls in both `dioxus` and `hl-lite`; `parse` gates `src/parser/**` implementation (markdown-rs + regex) while the AST types and `src/text.rs` are always compiled; `openapi` is types + viewer components (no deps), `openapi-parse` adds `openapiv3`/`serde_yaml`. Frontmatter uses `dioxus_mdx::parse_yaml_lite`, not `serde_yaml`
-- CI toolchain: Rust 1.98.0 (Topcoat's MSRV; the Dioxus crates still declare 1.88), Dioxus CLI 0.7.10, Bun for Tailwind
-
----
-
-## Dioxus 0.7 Reference
-
-**Dioxus 0.7 changes every API.** `cx`, `Scope`, and `use_state` are gone. Only use this reference.
-
-### Launching
-
-```rust
-use dioxus::prelude::*;
-
-fn main() {
-    dioxus::launch(App);
-}
-
-#[component]
-fn App() -> Element {
-    rsx! { "Hello, Dioxus!" }
-}
-```
-
-### RSX
-
-```rust
-rsx! {
-    div {
-        class: "container",
-        color: "red",
-        width: if condition { "100%" },
-        "Hello, Dioxus!"
-    }
-    for i in 0..5 {
-        div { "{i}" }
-    }
-    if condition {
-        div { "Condition is true!" }
-    }
-    {children}
-    {(0..5).map(|i| rsx! { span { "Item {i}" } })}
-}
-```
-
-### Assets
-
-```rust
-rsx! {
-    img { src: asset!("/assets/image.png"), alt: "An image" }
-    document::Stylesheet { href: asset!("/assets/styles.css") }
-}
-```
-
-### Components & Props
-
-- Annotate with `#[component]`, name must start uppercase or contain underscore
-- Props must be owned (`String`, `Vec<T>`), implement `PartialEq` + `Clone`
-- Wrap in `ReadOnlySignal` for reactive props
-- Re-renders when props change or internal reactive state updates
-
-### State
-
-```rust
-let mut count = use_signal(|| 0);                    // Local state
-let doubled = use_memo(move || count() * 2);          // Memoized derived state
-*count.write() += 1;                                  // Mutate (triggers re-render)
-count.with_mut(|c| *c += 1);                          // Alternative mutation
-
-// Context API
-use_context_provider(|| my_signal);                   // Parent provides
-let val = use_context::<Signal<String>>();             // Child consumes
-```
-
-### Async
-
-```rust
-let data = use_resource(move || async move { /* fetch */ });
-match data() {
-    Some(value) => rsx! { "{value}" },
-    None => rsx! { "Loading..." },
-}
-```
-
-### Routing
-
-```rust
-#[derive(Routable, Clone, PartialEq)]
-enum Route {
-    #[layout(NavBar)]
-        #[route("/")] Home {},
-        #[route("/blog/:id")] BlogPost { id: i32 },
-}
-```
-
-Requires `dioxus = { features = ["router"] }`.
-
-### Server Functions (Fullstack)
-
-```rust
-#[post("/api/double/:path/&query")]
-async fn double_server(number: i32, path: String, query: i32) -> Result<i32, ServerFnError> {
-    Ok(number * 2)
-}
-```
-
-Requires `dioxus = { features = ["fullstack"] }`. On server: generates endpoint. On client: generates HTTP call.
-
-### Hydration
-
-- Use `use_server_future` instead of `use_resource` for SSR data (serializes result to client)
-- Browser-only APIs (e.g. `localStorage`) must go in `use_effect` (runs after hydration)
-- Client initial render must match server render exactly
+- Cargo features (oxidt-mdx): `parse` gates the parser implementation (markdown-rs + regex) while the AST types and `src/text.rs` are always compiled; `openapi` is types only, `openapi-parse` adds `openapiv3`/`serde_yaml`. Frontmatter uses `oxidt_mdx::parse_yaml_lite`, not `serde_yaml`
+- CI toolchain: Rust 1.98.0 (Topcoat's MSRV); MSRV job checks the pipeline crates on 1.88. Bun for Tailwind and the Pele diagram tests

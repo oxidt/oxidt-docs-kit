@@ -5,8 +5,8 @@
 //! `dark`) on `<html>`; the button's icons key off the latter, so the server
 //! never needs to know which theme the visitor picked.
 
-use dioxus_mdx::lucide::{LdMoon, LdSun};
 use oxidt_docs_kit_core::ThemeConfig;
+use oxidt_mdx::lucide::{LdMoon, LdSun};
 use topcoat::{
     Result,
     view::{Unescaped, View, component, view},

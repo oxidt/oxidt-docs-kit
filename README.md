@@ -1,272 +1,35 @@
 # oxidt-docs-kit
 
-A documentation site framework for Rust with MDX content, sidebar navigation, full-text search, OpenAPI API reference pages, and theme switching — all embedded at compile time. Ships a [Dioxus 0.7](https://dioxuslabs.com/) shell (`dioxus-docs-kit`) and an experimental [Topcoat](https://github.com/tokio-rs/topcoat) shell (`topcoat-docs-kit`) on one shared core.
+A documentation site framework for Rust: Mintlify-style MDX, sidebar
+navigation, full-text search, OpenAPI reference pages and light/dark themes,
+all parsed at build time and embedded in the binary. The shell is
+[Topcoat](https://github.com/tokio-rs/topcoat) (server-rendered, no runtime
+script) styled with [oxidt-ui](https://github.com/oxidt/oxidt-ui).
 
-## Quick Start
-
-```sh
-dx new my-docs --template gh:hauju/dioxus-docs-kit-template
-cd my-docs && dx serve
-```
-
-That's a complete docs site — sidebar, ⌘K search, dark/light themes, sample MDX
-pages — with no Node, Tailwind, or safelist setup ([template
-repo](https://github.com/hauju/dioxus-docs-kit-template)). Add pages by
-dropping `.mdx` files into `docs/` and listing them in `docs/_nav.json`.
-
-To add the kit to an **existing** Dioxus app instead, follow the
-[Integration Guide](#integration-guide) below.
+The content pipeline crates are UI-agnostic and also power
+[dioxus-docs-kit](https://github.com/hauju/dioxus-docs-kit), the Dioxus +
+DaisyUI shell.
 
 ## Crates
 
 | Crate | Description |
 |-------|-------------|
-| [`dioxus-docs-kit`](crates/dioxus-docs-kit/) | Docs site shell (layout, sidebar, search, page nav, OpenAPI) |
-| [`dioxus-docs-kit-build`](crates/dioxus-docs-kit-build/) | Build-time helper that generates content maps from `_nav.json` |
-| [`dioxus-mdx`](crates/dioxus-mdx/) | Standalone MDX parser + renderer (usable without the full shell) |
+| [`topcoat-docs-kit`](crates/topcoat-docs-kit/) | Topcoat docs shell: layout, sidebar, search page, OpenAPI pages (experimental, Rust 1.98) |
+| [`oxidt-docs-kit-core`](crates/oxidt-docs-kit-core/) | Bundle loader, docs/blog/skills registries, search, SEO helpers; renders nothing |
+| [`oxidt-docs-kit-build`](crates/oxidt-docs-kit-build/) | Build-time helper: parses `_nav.json`, MDX and OpenAPI specs into one JSON bundle |
+| [`oxidt-mdx`](crates/oxidt-mdx/) | MDX parser and document types, no UI framework |
+| [`hl-lite`](crates/hl-lite/) | Zero-dependency syntax highlighter |
+| [`oxidt-docs`](crates/oxidt-docs/) | Static site generator: MDX + `_nav.json` in, plain HTML out (unpublished) |
 
-## Integration Guide
-
-### 1. Add dependencies
-
-```toml
-# Cargo.toml
-[dependencies]
-dioxus = { version = "0.7", features = ["router", "fullstack"] }
-dioxus-docs-kit = "0.10"
-
-[build-dependencies]
-dioxus-docs-kit-build = "0.10"
-
-[features]
-default = ["web"]
-web = ["dioxus/web", "dioxus-docs-kit/web"]
-server = ["dioxus/server", "dioxus-docs-kit/server"]
-```
-
-The kit's default features are `web` + `mermaid` + `openapi`. Syntax highlighting is always on and costs no features — it comes from [`hl-lite`](https://crates.io/crates/hl-lite), which lexes twelve languages in ~48 KB of wasm with no dependencies and no C. If you disable default features, re-enable `mermaid` and `openapi`, or ` ```mermaid ` fences stop rendering as diagrams and API reference pages disappear.
-
-### 2. Set up `build.rs`
-
-```rust
-fn main() {
-    dioxus_docs_kit_build::DocsBuild::new("docs/_nav.json")
-        // Optional: .with_openapi("api-reference", "docs/api-reference/spec.yaml")
-        .generate();
-}
-```
-
-This reads your `_nav.json`, parses every `.mdx` page (rendering its prose to
-HTML), parses any OpenAPI spec, precomputes the search index, and writes one
-`$OUT_DIR/docs_bundle.json`. All of it happens at build time, so your wasm
-bundle carries no MDX, Markdown or YAML parser and never re-parses a page.
-
-### 3. Create content
-
-Create `docs/_nav.json` with your navigation structure:
-
-```json
-{
-  "groups": [
-    {
-      "group": "Getting Started",
-      "pages": [
-        "getting-started/introduction",
-        "getting-started/installation"
-      ]
-    }
-  ]
-}
-```
-
-Then create matching MDX files at `docs/getting-started/introduction.mdx`, etc.
-
-### 4. Wire up routes and layout
-
-In `src/main.rs`:
-
-```rust
-use dioxus::prelude::*;
-use dioxus_docs_kit::{
-    DocsConfig, DocsLayout, DocsPageContent, DocsRegistry,
-    SearchButton, use_docs_context, use_docs_providers,
-};
-use std::sync::LazyLock;
-
-// Load the bundle build.rs wrote (docs, OpenAPI specs and search index,
-// already parsed)
-static DOCS: LazyLock<DocsRegistry> = LazyLock::new(|| {
-    DocsConfig::new(dioxus_docs_kit::docs_bundle!())
-        .with_default_path("getting-started/introduction")
-        .with_theme_toggle("light", "dark", "dark")
-        .build()
-});
-
-#[derive(Debug, Clone, Routable, PartialEq)]
-enum Route {
-    #[redirect("/", || Route::DocsPage { slug: vec!["getting-started".into(), "introduction".into()] })]
-    #[layout(MyDocsLayout)]
-        #[redirect("/docs", || Route::DocsPage { slug: vec!["getting-started".into(), "introduction".into()] })]
-        #[route("/docs/:..slug")]
-        DocsPage { slug: Vec<String> },
-}
-
-fn main() {
-    dioxus::launch(App);
-}
-
-#[component]
-fn App() -> Element {
-    rsx! {
-        document::Stylesheet { href: dioxus_docs_kit::DOCS_KIT_CSS }
-        Router::<Route> {}
-    }
-}
-
-/// Layout wrapper — wires DocsContext + DocsRegistry into the library
-#[component]
-fn MyDocsLayout() -> Element {
-    let nav = use_navigator();
-    let route = use_route::<Route>();
-
-    let current_path = match route {
-        Route::DocsPage { slug } => slug.join("/"),
-    };
-
-    // `use_docs_context` rewraps the path reactively for you. Building the
-    // signal yourself with a plain `use_memo(move || ...)` captures the first
-    // route and never updates — the sidebar highlight would freeze.
-    let docs_ctx = use_docs_context(
-        current_path,
-        "/docs",
-        Callback::new(move |path: String| {
-            let slug: Vec<String> = path.split('/').map(String::from).collect();
-            nav.push(Route::DocsPage { slug });
-        }),
-    );
-
-    let providers = use_docs_providers(&DOCS, docs_ctx);
-    let search_open = providers.search_open;
-
-    rsx! {
-        DocsLayout {
-            header: rsx! {
-                // Your custom navbar here — use search_open and drawer_open as needed
-                SearchButton { search_open }
-            },
-            Outlet::<Route> {}
-        }
-    }
-}
-
-#[component]
-fn DocsPage(slug: Vec<String>) -> Element {
-    rsx! {
-        DocsPageContent { path: slug.join("/") }
-    }
-}
-```
-
-### 5. Add the styles
-
-**Option A — precompiled stylesheet (zero setup, recommended to start).** The
-crate ships a compiled stylesheet covering everything its components emit
-(Tailwind utilities, DaisyUI dark/light themes, typography prose, the `--dk-*`
-theming tokens). Link it and you're done — no Tailwind, no Bun, no safelist:
-
-```rust
-rsx! {
-    document::Stylesheet { href: dioxus_docs_kit::DOCS_KIT_CSS }
-}
-```
-
-The sheet only contains the *kit's* classes. If your own pages use Tailwind
-utilities the kit doesn't, switch to Option B.
-
-**Option B — your own Tailwind build.** When `dioxus-docs-kit` is a crates.io
-dependency, Tailwind CSS 4 cannot scan `~/.cargo/` paths. Copy the safelist file into your project and reference it:
-
-`safelist.html` ships at the root of the published crate, so copy it out of the
-vendored source:
+## Running the example
 
 ```sh
-cp ~/.cargo/registry/src/*/dioxus-docs-kit-*/safelist.html safelist-docs-kit.html
+cargo run -p topcoat-docs-example
 ```
 
-(From a git checkout of this repo the path is `crates/dioxus-docs-kit/safelist.html`.)
-
-Then in your `tailwind.css`:
-
-```css
-@import "tailwindcss";
-@plugin "daisyui";
-
-@source "./src/**/*.{rs,html,css}";
-@source "./safelist-docs-kit.html";
-```
-
-The safelist file includes a version comment at the top — check it periodically and re-copy when the crate updates.
-
-### 6. Build for production
-
-```sh
-dx bundle --web --release --debug-symbols false
-```
-
-Without `--debug-symbols false`, `wasm-opt` aborts on the DWARF `dx` keeps by default and `dx` silently ships the unoptimized wasm (25 MB instead of 7 MB for this site). Copy the `[profile.wasm-release]` section from this repo's `Cargo.toml` and write brotli sidecars into the bundle — details in the [kit README](crates/dioxus-docs-kit/README.md#production-build).
-
-### 7. Optional: hand the docs to an in-browser agent (WebMCP)
-
-With the `webmcp` feature (off by default), `DocsWebMcp {}` mounted below `use_docs_providers` registers `docs_search`, `docs_get_page`, `docs_list_pages` and `docs_get_api_operation` as [WebMCP](https://github.com/webmachinelearning/webmcp) tools. They are read-only and answer from the search index and content already in the wasm.
-
-```toml
-dioxus-docs-kit = { version = "0.10", features = ["webmcp"] }
-```
-
-Chrome 153+ has `document.modelContext` natively (149 to 152 behind the origin trial or `chrome://flags/#enable-webmcp-testing`). Every other browser needs Google's [WebMCP polyfill](https://github.com/GoogleChromeLabs/webmcp-tools) (Apache-2.0) to run **before the wasm starts**, so it goes in `index.html`, not in a component. The polyfill is not part of the crate; copy it from this repo's `assets/webmcp-polyfill.js` and pin it as an unhashed asset so the URL is stable:
-
-```html
-<!-- index.html, in <head> -->
-<script src="/assets/webmcp-polyfill.js"></script>
-```
-
-```rust
-// main.rs: referenced from index.html, not from Rust, so keep it in the bundle.
-#[used]
-static WEBMCP_POLYFILL: Asset = asset!(
-    "/assets/webmcp-polyfill.js",
-    AssetOptions::js().with_minify(false).with_hash_suffix(false)
-);
-```
-
-The polyfill returns early when the browser has the native API. The `docs_` prefix keeps them clear of your page's own tools (WebMCP rejects a duplicate name). `scripts/browser-smoke.py` shows an agent calling them through `document.modelContext`, and the [WebMCP guide](https://dioxus-docs-kit.oxidt.com/docs/guides/webmcp) covers what each tool returns.
-
-## Claude Code Skill
-
-This repo ships a [Claude Code skill](skills/dioxus-docs-kit-integration/) that automates the full integration. Install it globally:
-
-```sh
-cp -r skills/dioxus-docs-kit-integration ~/.claude/skills/
-```
-
-Then open any Dioxus project with Claude Code and say:
-
-> "Add dioxus-docs-kit documentation to this project"
-
-The skill walks Claude through all 5 steps: dependencies, build.rs, content files, route/layout wiring, and Tailwind safelist.
-
-The kit can also render a repo's skills as site pages with an install command and GitHub links, like the example's `/skills` ([Skills guide](https://dioxus-docs-kit.oxidt.com/docs/guides/skills)).
-
-## Running the Example
-
-```sh
-curl -sSL http://dioxus.dev/install.sh | sh
-dx serve
-```
-
-## Used in production
-
-- [Stepshots](https://stepshots.com/)
+It renders the sample content in `docs/` and `blog/`. See the
+[topcoat-docs-kit README](crates/topcoat-docs-kit/README.md) to wire the kit
+into your own app.
 
 ## License
 

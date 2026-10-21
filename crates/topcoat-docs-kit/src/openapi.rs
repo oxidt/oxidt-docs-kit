@@ -1,8 +1,8 @@
-//! OpenAPI endpoint pages and the inline `<OpenAPI>` viewer. Markup mirrors `dioxus-mdx`'s `EndpointPage`;
+//! OpenAPI endpoint pages and the inline `<OpenAPI>` viewer. Markup mirrors `oxidt-mdx`'s `EndpointPage`;
 //! the expandable parts are `<details>`, so no runtime script is needed.
 
-use dioxus_mdx::lucide::{LdBraces, LdChevronRight, LdDownload, LdServer, LdSettings2, LdUpload};
-use dioxus_mdx::{
+use oxidt_mdx::lucide::{LdBraces, LdChevronRight, LdDownload, LdServer, LdSettings2, LdUpload};
+use oxidt_mdx::{
     ApiOperation, ApiParameter, ApiRequestBody, ApiResponse, CodeBlockNode, HttpMethod,
     OpenApiNode, OpenApiSpec, SchemaDefinition,
 };

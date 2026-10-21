@@ -11,4 +11,4 @@ topcoat = { version = "0.10.0", default-features = false, features = ["router", 
 topcoat-docs-kit = { path = "../../crates/topcoat-docs-kit" }
 
 [build-dependencies]
-dioxus-docs-kit-build = { workspace = true }
+oxidt-docs-kit-build = { workspace = true }
