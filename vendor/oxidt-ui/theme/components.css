@@ -2206,3 +2206,180 @@
         }
     }
 }
+
+/* ── Radar chart ──
+   Styles for the `radar_chart` registry component: a base shape in
+   `--radar-a`, comparison shapes in `--radar-b` switched by radio tabs
+   (`.radar-pick-N` shows `.radar-only-N`, up to 6), and a tooltip per axis on
+   hover or keyboard focus. */
+
+@utility radar {
+    @layer oxidt {
+        --radar-a: var(--color-info);
+        --radar-b: var(--color-accent);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+
+        & .radar-tabs {
+            align-self: flex-end;
+        }
+
+        & .radar-svg {
+            width: 100%;
+            max-width: 32rem;
+            overflow: visible;
+            font-size: 9px;
+        }
+
+        & .radar-grid {
+            fill: none;
+            stroke: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+            stroke-width: 0.75;
+        }
+
+        & .radar-label {
+            fill: color-mix(in oklab, var(--color-base-content) 55%, transparent);
+        }
+
+        & .radar-shape {
+            stroke-width: 1.5;
+            stroke-linejoin: round;
+            transition: opacity 0.3s ease;
+        }
+        & .radar-shape.radar-a {
+            fill: color-mix(in oklab, var(--radar-a) 12%, transparent);
+            stroke: var(--radar-a);
+        }
+        & .radar-shape.radar-b {
+            fill: color-mix(in oklab, var(--radar-b) 12%, transparent);
+            stroke: var(--radar-b);
+        }
+
+        & .radar-axis {
+            outline: none;
+        }
+        & .radar-hit {
+            fill: transparent;
+        }
+        & .radar-focus {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+        & .radar-axis:is(:hover, :focus-visible) .radar-focus {
+            opacity: 1;
+        }
+        & .radar-axis:focus-visible .radar-spoke {
+            stroke: var(--color-accent);
+            stroke-width: 1.5;
+        }
+        & .radar-spoke {
+            stroke: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+            stroke-width: 0.75;
+        }
+        & .radar-dot {
+            stroke: var(--color-base-100);
+            stroke-width: 1.5;
+        }
+        & .radar-dot.radar-a {
+            fill: var(--radar-a);
+        }
+        & .radar-dot.radar-b {
+            fill: var(--radar-b);
+        }
+
+        & .radar-tip-box {
+            fill: var(--color-base-100);
+            stroke: var(--color-base-300);
+            stroke-width: 0.75;
+            filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.12));
+        }
+        & .radar-tip-title,
+        & .radar-tip-delta {
+            fill: color-mix(in oklab, var(--color-base-content) 55%, transparent);
+            font-size: 8px;
+        }
+        & .radar-tip-text {
+            fill: var(--color-base-content);
+        }
+        & .radar-tip-value {
+            fill: var(--color-base-content);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        & .radar-key {
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        & .radar-key.radar-a {
+            stroke: var(--radar-a);
+        }
+        & .radar-key.radar-b {
+            stroke: var(--radar-b);
+        }
+
+        & .radar-legend {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 0.875rem;
+            color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+
+            & > span {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.375rem;
+            }
+        }
+        & .radar-swatch {
+            display: inline-block;
+            width: 0.875rem;
+            height: 2px;
+            border-radius: 1px;
+        }
+        & .radar-swatch.radar-a {
+            background: var(--radar-a);
+        }
+        & .radar-swatch.radar-b {
+            background: var(--radar-b);
+        }
+
+        /* Comparisons: hidden unless their tab is picked, or the only one. */
+        & :is(.radar-only-1, .radar-only-2, .radar-only-3, .radar-only-4, .radar-only-5, .radar-only-6) {
+            opacity: 0;
+            visibility: hidden;
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s;
+        }
+        & .radar-legend > :is(.radar-only-1, .radar-only-2, .radar-only-3, .radar-only-4, .radar-only-5, .radar-only-6) {
+            display: none;
+        }
+        &:not(:has(.radar-tabs)) .radar-only-1,
+        &:has(.radar-pick-1:checked) .radar-only-1,
+        &:has(.radar-pick-2:checked) .radar-only-2,
+        &:has(.radar-pick-3:checked) .radar-only-3,
+        &:has(.radar-pick-4:checked) .radar-only-4,
+        &:has(.radar-pick-5:checked) .radar-only-5,
+        &:has(.radar-pick-6:checked) .radar-only-6 {
+            opacity: 1;
+            visibility: visible;
+        }
+        &:not(:has(.radar-tabs)) .radar-legend > .radar-only-1,
+        &:has(.radar-pick-1:checked) .radar-legend > .radar-only-1,
+        &:has(.radar-pick-2:checked) .radar-legend > .radar-only-2,
+        &:has(.radar-pick-3:checked) .radar-legend > .radar-only-3,
+        &:has(.radar-pick-4:checked) .radar-legend > .radar-only-4,
+        &:has(.radar-pick-5:checked) .radar-legend > .radar-only-5,
+        &:has(.radar-pick-6:checked) .radar-legend > .radar-only-6 {
+            display: inline-flex;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            & * {
+                transition: none !important;
+            }
+        }
+    }
+}
