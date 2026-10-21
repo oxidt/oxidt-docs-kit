@@ -121,7 +121,7 @@ pub(crate) fn ThemeToggleButton(theme: Option<ThemeConfig>) -> Element {
 
     rsx! {
         button {
-            class: "btn btn-ghost btn-sm btn-square",
+            class: "btn btn-ghost btn-square lg:btn-sm",
             title: if is_dark { "Switch to light mode" } else { "Switch to dark mode" },
             onclick: move |_| {
                 let new_theme = if (current_theme)() == dark { light.clone() } else { dark.clone() };

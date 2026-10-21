@@ -209,7 +209,7 @@ pub fn DocsLayout(
                         div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
                             div { class: "flex-1 gap-2",
                                 button {
-                                    class: "btn btn-ghost btn-sm btn-square lg:hidden",
+                                    class: "btn btn-ghost btn-square lg:btn-sm lg:hidden",
                                     "aria-label": "Open navigation",
                                     onclick: move |_| drawer_open.toggle(),
                                     Icon { class: "size-5", icon: LdMenu }
@@ -296,7 +296,7 @@ pub fn SearchButton(search_open: Signal<bool>) -> Element {
 
     rsx! {
         button {
-            class: "dk-search-trigger btn btn-ghost btn-sm gap-2",
+            class: "dk-search-trigger btn btn-ghost gap-2 lg:btn-sm",
             r#type: "button",
             aria_label: "Search",
             aria_haspopup: "dialog",

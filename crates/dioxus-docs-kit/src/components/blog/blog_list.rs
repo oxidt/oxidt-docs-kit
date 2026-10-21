@@ -75,7 +75,7 @@ pub fn BlogList(hero: Option<Element>) -> Element {
                         span { class: "badge badge-primary badge-sm", "Featured" }
                         div { class: "h-px flex-1 bg-base-300" }
                     }
-                    div { class: "grid grid-cols-1 md:grid-cols-2 gap-6",
+                    div { class: grid_class(registry.featured_posts().len().min(2)),
                         for post in registry.featured_posts() {
                             BlogCard { key: "{post.slug}", post: post.clone() }
                         }
@@ -88,7 +88,7 @@ pub fn BlogList(hero: Option<Element>) -> Element {
                     p { class: "text-lg", "No posts found." }
                 }
             } else {
-                div { class: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+                div { class: grid_class(posts.read().len()),
                     for post in posts.read().iter() {
                         BlogCard { key: "{post.slug}", post: post.clone() }
                     }
@@ -139,5 +139,15 @@ pub fn BlogList(hero: Option<Element>) -> Element {
                 }
             }
         }
+    }
+}
+
+/// Grid for `n` blog cards: never more columns than cards, so a short list
+/// fills its row instead of leaving empty slots.
+fn grid_class(n: usize) -> &'static str {
+    match n {
+        0 | 1 => "grid grid-cols-1 gap-6",
+        2 => "grid grid-cols-1 md:grid-cols-2 gap-6",
+        _ => "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
     }
 }

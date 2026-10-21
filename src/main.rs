@@ -255,7 +255,7 @@ fn ThemePresetPicker() -> Element {
             div {
                 tabindex: "0",
                 role: "button",
-                class: "btn btn-ghost btn-sm gap-2",
+                class: "btn btn-ghost gap-2 lg:btn-sm",
                 "aria-label": "Theme preset",
                 Icon { class: "size-4", icon: LdPalette }
                 span { class: "hidden sm:inline text-sm", "Preset" }
@@ -364,7 +364,7 @@ fn SiteNavbar(
             div { class: "flex-1 gap-2 min-w-0",
                 if let Some(mut drawer) = drawer_open {
                     button {
-                        class: "btn btn-ghost btn-sm btn-square lg:hidden docs-menu-btn",
+                        class: "btn btn-ghost btn-square lg:btn-sm lg:hidden docs-menu-btn",
                         "aria-label": "Open navigation",
                         onclick: move |_| drawer.toggle(),
                         Icon { class: "size-5", icon: LdMenu }
@@ -391,7 +391,7 @@ fn SiteNavbar(
                         div {
                             tabindex: "0",
                             role: "button",
-                            class: "btn btn-ghost btn-sm btn-square rounded-lg",
+                            class: "btn btn-ghost btn-square lg:btn-sm rounded-lg",
                             "aria-label": "Open navigation",
                             Icon { class: "size-5", icon: LdMenu }
                         }
@@ -415,7 +415,7 @@ fn SiteNavbar(
                     href: "https://github.com/oxidt/oxidt-docs-kit",
                     target: "_blank",
                     rel: "noopener noreferrer",
-                    class: "btn btn-ghost btn-sm btn-square rounded-lg",
+                    class: "btn btn-ghost btn-square lg:btn-sm rounded-lg",
                     "aria-label": "GitHub repository",
                     Icon { class: "size-5", icon: LdGithub }
                 }
@@ -694,7 +694,7 @@ fn Home() -> Element {
 #[component]
 fn HeroSection() -> Element {
     rsx! {
-        section { class: "relative px-4 pt-24 pb-20 lg:pt-32 lg:pb-28",
+        section { class: "relative px-4 pt-16 pb-12 lg:pt-32 lg:pb-24",
             div { class: "max-w-3xl mx-auto text-center",
                 div { class: "animate-fade-up",
                     span { class: "badge badge-outline badge-primary text-xs tracking-wide",
@@ -747,7 +747,7 @@ fn FeatureCard(icon: Element, title: &'static str, description: &'static str) ->
 #[component]
 fn FeaturesSection() -> Element {
     rsx! {
-        section { class: "px-4 py-20",
+        section { class: "px-4 py-12 lg:py-16",
             div { class: "max-w-5xl mx-auto",
                 div { class: "text-center mb-12",
                     h2 { class: "text-3xl font-bold tracking-tight", "Everything You Need" }
@@ -797,7 +797,7 @@ fn FeaturesSection() -> Element {
 #[component]
 fn UsedBySection() -> Element {
     rsx! {
-        section { class: "px-4 py-20",
+        section { class: "px-4 py-12 lg:py-16",
             div { class: "max-w-5xl mx-auto",
                 div { class: "text-center mb-12",
                     h2 { class: "text-3xl font-bold tracking-tight", "Used in Production" }
@@ -895,7 +895,7 @@ fn MyDocsLayout() -> Element {
 #[component]
 fn CodeSection() -> Element {
     rsx! {
-        section { class: "px-4 py-20",
+        section { class: "px-4 py-12 lg:py-16",
             div { class: "max-w-3xl mx-auto",
                 div { class: "text-center mb-12",
                     h2 { class: "text-3xl font-bold tracking-tight", "Simple Integration" }

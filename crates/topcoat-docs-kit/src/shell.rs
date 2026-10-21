@@ -38,7 +38,7 @@ pub async fn docs_page(registry: &DocsRegistry, base_path: &str, path: &str) -> 
                 Some((operation, spec)) => {
                     <div class="dk-endpoint flex flex-col">
                         endpoint_page(operation: operation, spec: spec)
-                        <main class="px-8 lg:px-12 pb-12">
+                        <main class="px-8 lg:px-12 pb-12 lg:w-[55%]">
                             <div class="max-w-2xl">
                                 let (prev, next) = registry.page_neighbors(path);
                                 page_nav(registry: registry, base_path: base_path, prev: prev.as_deref(), next: next.as_deref())

@@ -382,7 +382,7 @@ async fn mermaid_diagram(code: &str) -> Result<impl View> {
 async fn code_block(block: &CodeBlockNode) -> Result<impl View> {
     let label = block.filename.as_deref().or(block.language.as_deref());
     Ok(view! {
-        <div class="dk-code-block not-prose my-6 relative group w-fit max-w-full rounded-lg border border-base-content/10 overflow-hidden">
+        <div class="dk-code-block not-prose my-6 relative group w-full rounded-lg border border-base-content/10 overflow-hidden">
             match label {
                 Some(label) => {
                     <div class="flex items-center justify-between bg-base-200/80 px-4 py-2.5 border-b border-base-content/10 text-sm">
@@ -469,7 +469,7 @@ fn code_language(block: &CodeBlockNode) -> Option<Lang> {
 }
 
 #[component]
-async fn copy_button(code: &str) -> Result<impl View> {
+pub(crate) async fn copy_button(code: &str) -> Result<impl View> {
     Ok(view! {
         <button
             type="button"

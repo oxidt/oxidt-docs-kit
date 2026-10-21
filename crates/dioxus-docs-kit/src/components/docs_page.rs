@@ -44,7 +44,8 @@ pub fn DocsPageContent(path: String, article_footer: Option<Element>) -> Element
             DocsPageMeta { path: path.clone() }
             div { class: "dk-endpoint flex flex-col",
                 EndpointPage { operation: operation.clone(), spec: spec.clone() }
-                main { class: "px-8 lg:px-12 pb-12",
+                // Matches the endpoint's left column (the aside is `lg:w-[45%]`).
+                main { class: "px-8 lg:px-12 pb-12 lg:w-[55%]",
                     div { class: "max-w-2xl",
                         if let Some(ft) = article_footer {
                             div { class: "dk-article-footer-slot mb-6", {ft} }

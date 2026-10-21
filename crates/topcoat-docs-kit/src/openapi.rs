@@ -11,7 +11,7 @@ use topcoat::{
     view::{BoxView, View, ViewExt, component, view},
 };
 
-use crate::content::highlighted;
+use crate::content::{copy_button, highlighted};
 use crate::icon::icon;
 
 /// Main column (method, path, parameters, body, responses) and a sticky
@@ -85,10 +85,11 @@ pub(crate) async fn endpoint_page(
                 <div class="lg:sticky lg:top-12 lg:h-[calc(100vh-3rem)] lg:overflow-y-auto p-6 space-y-6">
                     <div>
                         <h3 class="text-sm font-semibold text-base-content/70 uppercase tracking-wider mb-3">"Request"</h3>
-                        <div class="rounded-lg border border-base-300 overflow-hidden">
+                        <div class="group rounded-lg border border-base-300 overflow-hidden">
                             <div class="px-3 py-2 bg-base-300/50 border-b border-base-300 flex items-center gap-2">
                                 method_badge(method: op.method)
                                 <code class="text-xs font-mono text-base-content/70 truncate">(op.path.as_str())</code>
+                                <div class="ml-auto">copy_button(code: &curl.code)</div>
                             </div>
                             <div class="dk-code-block-body bg-base-200">highlighted(block: &curl)</div>
                         </div>
@@ -104,12 +105,13 @@ pub(crate) async fn endpoint_page(
                         let json = sample(json, "json");
                         <div>
                             <h3 class="text-sm font-semibold text-base-content/70 uppercase tracking-wider mb-3">"Response"</h3>
-                            <div class="rounded-lg border border-base-300 overflow-hidden">
+                            <div class="group rounded-lg border border-base-300 overflow-hidden">
                                 <div class="px-3 py-2 bg-base-300/50 border-b border-base-300 flex items-center gap-2">
                                     <span class=(format!("badge {status_color} badge-sm font-mono font-bold"))>(status)</span>
-                                    <span class="text-xs text-base-content/50">"application/json"</span>
+                                    <span class="text-xs text-base-content/60">"application/json"</span>
+                                    <div class="ml-auto">copy_button(code: &json.code)</div>
                                 </div>
-                                <div class="dk-code-block-body bg-base-200 max-h-[60vh] overflow-y-auto">highlighted(block: &json)</div>
+                                <div class="dk-code-block-body bg-base-200">highlighted(block: &json)</div>
                             </div>
                         </div>
                     }

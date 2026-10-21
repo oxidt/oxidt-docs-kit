@@ -9,6 +9,7 @@ use super::method_badge::MethodBadge;
 use super::parameters_list::ParametersList;
 use super::request_body::RequestBodySection;
 use super::responses_list::ResponsesList;
+use crate::components::code::CopyButton;
 
 /// Language selector for the endpoint page's code samples.
 enum SampleLang {
@@ -53,6 +54,8 @@ pub fn EndpointPage(props: EndpointPageProps) -> Element {
     let response_example = op.generate_response_example();
 
     let method_bg = op.method.bg_class();
+    let curl_copied = use_signal(|| false);
+    let response_copied = use_signal(|| false);
 
     rsx! {
         div { class: "flex flex-col lg:flex-row gap-0",
@@ -139,11 +142,14 @@ pub fn EndpointPage(props: EndpointPageProps) -> Element {
                         h3 { class: "text-sm font-semibold text-base-content/70 uppercase tracking-wider mb-3",
                             "Request"
                         }
-                        div { class: "rounded-lg border border-base-300 overflow-hidden",
+                        div { class: "group rounded-lg border border-base-300 overflow-hidden",
                             div { class: "px-3 py-2 bg-base-300/50 border-b border-base-300 flex items-center gap-2",
                                 MethodBadge { method: op.method }
                                 code { class: "text-xs font-mono text-base-content/70 truncate",
                                     "{op.path}"
+                                }
+                                div { class: "ml-auto",
+                                    CopyButton { code: curl.clone(), copied: curl_copied }
                                 }
                             }
                             div { class: "dk-code-block-body bg-base-200",
@@ -167,16 +173,21 @@ pub fn EndpointPage(props: EndpointPageProps) -> Element {
                                     h3 { class: "text-sm font-semibold text-base-content/70 uppercase tracking-wider mb-3",
                                         "Response"
                                     }
-                                    div { class: "rounded-lg border border-base-300 overflow-hidden",
+                                    div { class: "group rounded-lg border border-base-300 overflow-hidden",
                                         div { class: "px-3 py-2 bg-base-300/50 border-b border-base-300 flex items-center gap-2",
                                             span { class: "badge {status_color} badge-sm font-mono font-bold",
                                                 "{status_code}"
                                             }
-                                            span { class: "text-xs text-base-content/50",
+                                            span { class: "text-xs text-base-content/60",
                                                 "application/json"
                                             }
+                                            div { class: "ml-auto",
+                                                CopyButton { code: response_json.clone(), copied: response_copied }
+                                            }
                                         }
-                                        div { class: "dk-code-block-body bg-base-200 max-h-[60vh] overflow-y-auto",
+                                        // No inner scroll: the sticky column already
+                                        // scrolls, and a second region hid the JSON tail.
+                                        div { class: "dk-code-block-body bg-base-200",
                                             {code_sample(response_json.clone(), SampleLang::Json)}
                                         }
                                     }

@@ -48,7 +48,7 @@ pub fn SkillsLayout(header: Option<Element>, children: Element) -> Element {
                     div { class: "navbar bg-base-200 border-b border-base-300 px-4 lg:px-8",
                         div { class: "flex-1 gap-2",
                             button {
-                                class: "btn btn-ghost btn-sm btn-square lg:hidden",
+                                class: "btn btn-ghost btn-square lg:btn-sm lg:hidden",
                                 "aria-label": "Open navigation",
                                 onclick: move |_| drawer_open.toggle(),
                                 Icon { class: "size-5", icon: LdMenu }
@@ -201,7 +201,9 @@ pub fn SkillsIndex(
             }
             for (group, skills) in registry.groups() {
                 h2 { class: "text-2xl font-semibold mt-8 mb-4", "{group}" }
-                div { class: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+                // One row per skill: groups are usually small, and a row has
+                // room for more of the description.
+                div { class: "grid grid-cols-1 gap-4",
                     for skill in skills {
                         article { class: "group flex flex-col rounded-xl border border-base-300 bg-base-200/30 hover:border-primary/30 hover:shadow-lg transition-all duration-200 overflow-hidden",
                             div { class: "flex flex-col flex-1 p-5 gap-3",

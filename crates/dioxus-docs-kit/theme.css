@@ -81,7 +81,7 @@
        tokens with flat colors. */
     --dk-hl-keyword:     light-dark(#cf222e, #bb9af7);
     --dk-hl-string:      light-dark(#0a3069, #9ece6a);
-    --dk-hl-comment:     light-dark(#6e7781, #565f89);
+    --dk-hl-comment:     light-dark(#59636e, #7a82ad);
     --dk-hl-number:      light-dark(#0550ae, #ff9e64);
     --dk-hl-type:        light-dark(#953800, #2ac3de);
     --dk-hl-function:    light-dark(#8250df, #7aa2f7);
@@ -159,8 +159,9 @@
 /* -------------------------------------------------------------------------- */
 /* Code blocks — container fit                                                */
 /* dioxus-mdx renders a `<pre class="dk-code">` carrying its own base layout  */
-/* inline. Tame it so it inherits the kit's container chrome and wraps long   */
-/* lines.                                                                     */
+/* inline. Tame it so it inherits the kit's container chrome. Long lines     */
+/* scroll rather than wrap: wrapping breaks identifiers and hides indentation */
+/* on phones.                                                                 */
 /* -------------------------------------------------------------------------- */
 
 .dk-code-block .dk-code {
@@ -169,10 +170,9 @@
     line-height: 1.625;
     margin: 0;
     max-width: 100%;
-    overflow-x: hidden;
-    overflow-wrap: anywhere;
+    overflow-x: auto;
     padding: 1rem;
-    white-space: pre-wrap;
+    white-space: pre;
 }
 
 .dk-code-block-body--bare .dk-code,

@@ -66,7 +66,7 @@ pub async fn blog_index_page(
                             <span class="badge badge-primary badge-sm">"Featured"</span>
                             <div class="h-px flex-1 bg-base-300"></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class=(grid_class(registry.featured_posts().len().min(2)))>
                             for post in registry.featured_posts() {
                                 blog_card(registry: registry, base_path: base_path, post: post)
                             }
@@ -79,7 +79,7 @@ pub async fn blog_index_page(
                     }
                     <div class="text-center py-16 text-base-content/50"><p class="text-lg">"No posts found."</p></div>
                 } else {
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class=(grid_class(posts.len()))>
                         for post in &posts {
                             blog_card(registry: registry, base_path: base_path, post: post)
                         }
@@ -257,7 +257,7 @@ pub async fn blog_category_page(
                             }
                         </header>
                         <div class="mb-8">tag_filter(registry: registry, base_path: base_path, active_tag: None, active_category: Some(slug))</div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class=(grid_class(posts.len()))>
                             for post in &posts {
                                 blog_card(registry: registry, base_path: base_path, post: post)
                             }
@@ -654,6 +654,16 @@ fn encode_query_value(value: &str) -> String {
         }
     }
     out
+}
+
+/// Grid for `n` blog cards: never more columns than cards, so a short list
+/// fills its row instead of leaving empty slots.
+fn grid_class(n: usize) -> &'static str {
+    match n {
+        0 | 1 => "grid grid-cols-1 gap-6",
+        2 => "grid grid-cols-1 md:grid-cols-2 gap-6",
+        _ => "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+    }
 }
 
 #[cfg(test)]
