@@ -4,7 +4,7 @@ version.workspace = true
 authors.workspace = true
 edition.workspace = true
 # Topcoat's own MSRV.
-rust-version = "1.98"
+rust-version = "1.99"
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
@@ -19,7 +19,7 @@ oxidt-docs-kit-core = { workspace = true, features = ["openapi"] }
 # Types, the Lucide icon data and the highlighter only: no Dioxus components.
 dioxus-mdx = { workspace = true }
 hl-lite = { workspace = true }
-topcoat = { version = "0.10.0", default-features = false, features = ["router"] }
+topcoat = { version = "0.11.0", default-features = false, features = ["router"] }
 
 [features]
 default = ["mermaid"]
