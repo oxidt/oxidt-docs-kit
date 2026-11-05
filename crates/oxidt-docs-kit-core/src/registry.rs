@@ -7,7 +7,7 @@ use crate::config::{DocsConfig, ThemeConfig};
 use crate::error::DocsKitError;
 use crate::search::Field;
 use crate::seo::xml_escape;
-use dioxus_mdx::{ApiOperation, ApiTag, HttpMethod, OpenApiSpec, ParsedDoc};
+use oxidt_mdx::{ApiOperation, ApiTag, HttpMethod, OpenApiSpec, ParsedDoc};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -63,13 +63,13 @@ pub struct ApiEndpointEntry {
 /// `anchor`, and each heading starts a new entry whose `anchor` deep-links to
 /// the rendered heading id. OpenAPI operations are indexed as single page-level
 /// entries. The whole index, `*_lower` fields included, is built by
-/// `dioxus-docs-kit-build` and read straight out of the content bundle.
+/// `oxidt-docs-kit-build` and read straight out of the content bundle.
 #[derive(PartialEq, Deserialize)]
 pub struct SearchEntry {
     /// Content path of the owning page (e.g. "getting-started/introduction").
     pub path: String,
     /// Anchor id of the section heading, empty for page-level / intro entries.
-    /// Matches the rendered heading `id` (`dioxus_mdx::slugify`).
+    /// Matches the rendered heading `id` (`oxidt_mdx::slugify`).
     #[serde(default)]
     pub anchor: String,
     /// Page title (frontmatter title or humanised slug / API summary).
@@ -159,7 +159,7 @@ impl DocsRegistry {
         // Warn if OpenAPI specs were registered but no nav group matches api_group_name
         if !openapi_specs.is_empty() && !nav.groups.iter().any(|g| g.group == api_group_name) {
             tracing::warn!(
-                "dioxus-docs-kit: OpenAPI specs registered but no nav group \
+                "oxidt-docs-kit: OpenAPI specs registered but no nav group \
                  matches api_group_name \"{api_group_name}\". API endpoints won't appear \
                  in the sidebar. Add a group with `\"group\": \"{api_group_name}\"` to \
                  _nav.json, or call .with_api_group_name(\"<your group name>\") on DocsConfig."
@@ -755,7 +755,7 @@ paths:
         pages: &[(&str, &str)],
         specs: &[(&str, &str)],
     ) -> &'static str {
-        dioxus_docs_kit_build::docs_bundle_json(nav, pages, specs)
+        oxidt_docs_kit_build::docs_bundle_json(nav, pages, specs)
             .expect("generate docs bundle")
             .leak()
     }
@@ -824,7 +824,7 @@ paths:
 
     #[test]
     fn generator_reports_openapi_errors_with_the_prefix() {
-        let err = dioxus_docs_kit_build::docs_bundle_json(
+        let err = oxidt_docs_kit_build::docs_bundle_json(
             NAV,
             PAGES,
             &[("api-reference", "openapi: true")],

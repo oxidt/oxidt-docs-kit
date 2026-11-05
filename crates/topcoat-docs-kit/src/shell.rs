@@ -1,10 +1,10 @@
 //! The docs page shell: header with tabs and search, sidebar, article, table
 //! of contents, previous/next links, and the search results page. Markup and classes mirror `dioxus-docs-kit`.
 
-use dioxus_mdx::HttpMethod;
-use dioxus_mdx::extract_headers;
-use dioxus_mdx::lucide::LdSearch;
 use oxidt_docs_kit_core::{DocsHit, DocsRegistry, NavGroup, search::MAX_RESULTS};
+use oxidt_mdx::HttpMethod;
+use oxidt_mdx::extract_headers;
+use oxidt_mdx::lucide::LdSearch;
 use topcoat::{
     Result,
     router::StatusCode,

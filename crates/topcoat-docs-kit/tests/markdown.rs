@@ -34,7 +34,7 @@ paths:
 "#;
 
 static DOCS: LazyLock<DocsRegistry> = LazyLock::new(|| {
-    let bundle = dioxus_docs_kit_build::docs_bundle_json(
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(
         NAV,
         &[
             ("guide/intro", INTRO),

@@ -35,7 +35,7 @@ const POSTS: &[(&str, &str)] = &[
 ];
 
 fn registry(per_page: usize) -> &'static BlogRegistry {
-    let bundle = dioxus_docs_kit_build::blog_bundle_json(MANIFEST, POSTS)
+    let bundle = oxidt_docs_kit_build::blog_bundle_json(MANIFEST, POSTS)
         .expect("generate blog bundle")
         .leak();
     Box::leak(Box::new(
@@ -59,7 +59,7 @@ fn category_registry() -> &'static BlogRegistry {
             "---\ntitle: \"B\"\ndate: \"2026-01-01\"\nauthor: \"x\"\ntags: [\"rust\"]\n---\nB\n",
         ),
     ];
-    let bundle = dioxus_docs_kit_build::blog_bundle_json(manifest, posts)
+    let bundle = oxidt_docs_kit_build::blog_bundle_json(manifest, posts)
         .expect("generate blog bundle")
         .leak();
     Box::leak(Box::new(

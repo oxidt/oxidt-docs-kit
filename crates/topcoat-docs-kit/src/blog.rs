@@ -5,11 +5,11 @@
 //!
 //! Page numbers are one-based everywhere in this module, as they are in URLs.
 
-use dioxus_mdx::extract_headers;
-use dioxus_mdx::lucide::{LdChevronLeft, LdChevronRight, LdClock, LdSearch};
 use oxidt_docs_kit_core::search::{MAX_RESULTS, SNIPPET_WINDOW, build_snippet, split_terms};
 use oxidt_docs_kit_core::seo::{article_jsonld, join_site_url};
 use oxidt_docs_kit_core::{BlogPost, BlogRegistry};
+use oxidt_mdx::extract_headers;
+use oxidt_mdx::lucide::{LdChevronLeft, LdChevronRight, LdClock, LdSearch};
 use topcoat::{
     Result,
     router::StatusCode,

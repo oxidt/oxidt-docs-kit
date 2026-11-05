@@ -1,19 +1,19 @@
 //! MDX content rendering: one Topcoat component per [`DocNode`] variant.
 //!
-//! The markup and Tailwind classes mirror `dioxus-mdx`'s components so the
+//! The markup and Tailwind classes mirror `oxidt-mdx`'s components so the
 //! two kits look the same. Everything renders on the server with no runtime
 //! script: tabs are DaisyUI radio tabs, accordions and expandables are
 //! `<details>`, and copy buttons use an inline `onclick`.
 
-use dioxus_mdx::lucide::{
+use hl_lite::{Kind, Lang};
+use oxidt_mdx::lucide::{
     LdChevronDown, LdChevronRight, LdCopy, LdInfo, LdLightbulb, LdTriangleAlert, icon_for_name,
 };
-use dioxus_mdx::{
+use oxidt_mdx::{
     AccordionGroupNode, CalloutNode, CalloutType, CardNode, CodeBlockNode, DocNode, ExpandableNode,
     MERMAID_JS, ParamFieldNode, ResponseFieldNode, StepsNode, TabsNode, UpdateNode,
     clean_step_title, slugify,
 };
-use hl_lite::{Kind, Lang};
 use topcoat::{
     Result,
     view::{BoxView, Unescaped, View, ViewExt, component, view},
@@ -368,7 +368,7 @@ async fn mermaid_diagram(code: &str) -> Result<impl View> {
     let script = format!(
         "(function(){{if(window.__dkMermaidOnce)return;window.__dkMermaidOnce=1;function go(){{{MERMAID_JS}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()}})()"
     );
-    let pele_url = format!("/_docs/pele/{}/lazy.js", dioxus_mdx::PELE_VERSION);
+    let pele_url = format!("/_docs/pele/{}/lazy.js", oxidt_mdx::PELE_VERSION);
     Ok(view! {
         <div class="not-prose my-6 flex justify-center">
             <pre class="mermaid" data-pele-url=(pele_url)>(code)</pre>
@@ -458,7 +458,7 @@ pub(crate) async fn highlighted(block: &CodeBlockNode) -> Result<impl View> {
     })
 }
 
-/// Same resolution as `dioxus-mdx`: the fence slug wins, the filename is the fallback.
+/// Same resolution as `oxidt-mdx`: the fence slug wins, the filename is the fallback.
 fn code_language(block: &CodeBlockNode) -> Option<Lang> {
     block
         .language

@@ -1,7 +1,7 @@
 //! # oxidt-docs-kit-core
 //!
 //! The UI-framework-agnostic half of `dioxus-docs-kit`: it loads the content
-//! bundle written by `dioxus-docs-kit-build` and answers every question a docs
+//! bundle written by `oxidt-docs-kit-build` and answers every question a docs
 //! or blog shell asks of it — page lookup, navigation, search, OpenAPI
 //! operations, `llms.txt`, sitemaps and feeds. It renders nothing, so any UI
 //! layer can sit on top.
@@ -35,7 +35,7 @@ pub use error::DocsKitError;
 pub use registry::{ApiEndpointEntry, DocsHit, DocsRegistry, NavConfig, NavGroup, SearchEntry};
 pub use skills::{Skill, SkillsConfig, SkillsRegistry, SkillsSearchEntry};
 
-/// Embeds the docs bundle written by `dioxus-docs-kit-build` as a
+/// Embeds the docs bundle written by `oxidt-docs-kit-build` as a
 /// `&'static str`.
 ///
 /// ```rust,ignore
@@ -44,8 +44,8 @@ pub use skills::{Skill, SkillsConfig, SkillsRegistry, SkillsSearchEntry};
 /// });
 /// ```
 ///
-/// Requires `dioxus-docs-kit-build` in `[build-dependencies]` and a `build.rs`
-/// that calls `dioxus_docs_kit_build::DocsBuild::new("docs/_nav.json").generate()`.
+/// Requires `oxidt-docs-kit-build` in `[build-dependencies]` and a `build.rs`
+/// that calls `oxidt_docs_kit_build::DocsBuild::new("docs/_nav.json").generate()`.
 #[macro_export]
 macro_rules! docs_bundle {
     () => {
@@ -53,7 +53,7 @@ macro_rules! docs_bundle {
     };
 }
 
-/// Embeds the blog bundle written by `dioxus-docs-kit-build` as a
+/// Embeds the blog bundle written by `oxidt-docs-kit-build` as a
 /// `&'static str`.
 ///
 /// ```rust,ignore
@@ -62,8 +62,8 @@ macro_rules! docs_bundle {
 /// });
 /// ```
 ///
-/// Requires `dioxus-docs-kit-build` in `[build-dependencies]` and a `build.rs`
-/// that calls `dioxus_docs_kit_build::BlogBuild::new("blog/_blog.json").generate()`.
+/// Requires `oxidt-docs-kit-build` in `[build-dependencies]` and a `build.rs`
+/// that calls `oxidt_docs_kit_build::BlogBuild::new("blog/_blog.json").generate()`.
 #[macro_export]
 macro_rules! blog_bundle {
     () => {
@@ -71,7 +71,7 @@ macro_rules! blog_bundle {
     };
 }
 
-/// Embeds the skills bundle written by `dioxus-docs-kit-build` as a
+/// Embeds the skills bundle written by `oxidt-docs-kit-build` as a
 /// `&'static str`.
 ///
 /// ```rust,ignore
@@ -81,7 +81,7 @@ macro_rules! blog_bundle {
 /// ```
 ///
 /// Requires a `build.rs` that calls
-/// `dioxus_docs_kit_build::SkillsBuild::new("skills/_skills.json").generate()`.
+/// `oxidt_docs_kit_build::SkillsBuild::new("skills/_skills.json").generate()`.
 #[macro_export]
 macro_rules! skills_bundle {
     () => {

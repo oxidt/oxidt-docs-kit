@@ -1,6 +1,6 @@
 //! The build-time content bundle, as read by the runtime.
 //!
-//! `dioxus-docs-kit-build` writes one JSON document per registry into `OUT_DIR`;
+//! `oxidt-docs-kit-build` writes one JSON document per registry into `OUT_DIR`;
 //! the app embeds it with [`docs_bundle!`](crate::docs_bundle) /
 //! [`blog_bundle!`](crate::blog_bundle) / [`skills_bundle!`](crate::skills_bundle)
 //! and the registry deserializes it the
@@ -11,13 +11,13 @@ use crate::error::DocsKitError;
 use crate::registry::{NavConfig, SearchEntry};
 use crate::skills::{Skill, SkillsSearchEntry};
 #[cfg(feature = "openapi")]
-use dioxus_mdx::OpenApiSpec;
-use dioxus_mdx::ParsedDoc;
+use oxidt_mdx::OpenApiSpec;
+use oxidt_mdx::ParsedDoc;
 use serde::Deserialize;
 use std::collections::HashMap;
 
 /// Bundle layout this library understands. Must match
-/// `dioxus_docs_kit_build::bundle::BUNDLE_VERSION`.
+/// `oxidt_docs_kit_build::bundle::BUNDLE_VERSION`.
 pub(crate) const BUNDLE_VERSION: u32 = 1;
 
 fn check_version(found: u32) -> Result<(), DocsKitError> {
@@ -116,7 +116,7 @@ mod tests {
             r#"{"version":999,"nav":{"groups":[]},"docs":[],"search":[]}"#,
         ));
         assert!(matches!(e, DocsKitError::BundleVersion { found: 999, .. }));
-        assert!(e.to_string().contains("dioxus-docs-kit-build"));
+        assert!(e.to_string().contains("oxidt-docs-kit-build"));
     }
 
     #[test]

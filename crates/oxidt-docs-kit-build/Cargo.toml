@@ -1,0 +1,26 @@
+[package]
+name = "oxidt-docs-kit-build"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Build-time helper for oxidt-docs-kit and dioxus-docs-kit: parses docs, blog posts and OpenAPI specs into an embeddable content bundle"
+documentation = "https://docs.rs/oxidt-docs-kit-build"
+keywords = ["documentation", "mdx", "build-script"]
+categories = ["development-tools::build-utils"]
+readme = "README.md"
+
+[dependencies]
+# `default-features = false` keeps `dioxus` (and every renderer dependency) out
+# of consumers' build-dependency graph: this pulls only the parser and the
+# document value types.
+oxidt-mdx = { workspace = true, features = ["parse", "openapi-parse"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+# For validating docs frontmatter *shapes* (reporting the ones the runtime
+# subset rejects; docs/blog frontmatter itself is parsed with `parse_yaml_lite`)
+# and for `SKILL.md` frontmatter, which uses block scalars and nested maps.
+serde_yaml = { workspace = true }

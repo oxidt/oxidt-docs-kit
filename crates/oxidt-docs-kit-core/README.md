@@ -1,9 +1,11 @@
 # oxidt-docs-kit-core
 
-The UI-framework-agnostic core of [dioxus-docs-kit](https://crates.io/crates/dioxus-docs-kit).
+The UI-framework-agnostic core of
+[oxidt-docs-kit](https://github.com/oxidt/oxidt-docs-kit) (`topcoat-docs-kit`)
+and [dioxus-docs-kit](https://crates.io/crates/dioxus-docs-kit).
 
 It loads the content bundle written by
-[`dioxus-docs-kit-build`](https://crates.io/crates/dioxus-docs-kit-build) and
+[`oxidt-docs-kit-build`](https://crates.io/crates/oxidt-docs-kit-build) and
 answers every question a docs or blog shell asks of it — page lookup,
 navigation, search, OpenAPI operations, `llms.txt`, sitemaps and RSS feeds. It
 renders nothing and has no `dioxus` dependency, so any UI layer can sit on top.

@@ -1,9 +1,0 @@
-{
-  "repo": "oxidt/oxidt-docs-kit",
-  "path": "skills",
-  "ref": "main",
-  "groups": [
-    { "group": "Setup", "skills": ["dioxus-docs-kit-integration"] },
-    { "group": "Theming", "skills": ["dioxus-docs-kit-theme"] }
-  ]
-}

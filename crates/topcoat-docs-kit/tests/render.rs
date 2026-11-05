@@ -75,7 +75,7 @@ fn main() {}
 "#;
 
 fn registry() -> &'static DocsRegistry {
-    let bundle = dioxus_docs_kit_build::docs_bundle_json(
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(
         NAV,
         &[
             ("guide/intro", INTRO),
@@ -274,7 +274,7 @@ async fn search_includes_endpoint_hits_with_a_method_badge() {
 }
 
 fn themed_registry() -> &'static DocsRegistry {
-    let bundle = dioxus_docs_kit_build::docs_bundle_json(NAV, &[("guide/intro", INTRO)], &[])
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(NAV, &[("guide/intro", INTRO)], &[])
         .expect("generate bundle")
         .leak();
     Box::leak(Box::new(
@@ -324,7 +324,7 @@ async fn inline_openapi_viewer_lists_endpoints_by_tag() {
         "---\ntitle: Inline\n---\n\n<OpenAPI>\n{}\n</OpenAPI>\n",
         SPEC.trim()
     );
-    let bundle = dioxus_docs_kit_build::docs_bundle_json(
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(
         r#"{ "groups": [ { "group": "G", "pages": ["g/inline"] } ] }"#,
         &[("g/inline", mdx.as_str())],
         &[],
@@ -345,7 +345,7 @@ async fn inline_openapi_viewer_lists_endpoints_by_tag() {
 #[tokio::test]
 async fn mermaid_fences_render_as_diagrams() {
     let mdx = "---\ntitle: D\n---\n\n```mermaid\ngraph TD\n  A --> B\n```\n";
-    let bundle = dioxus_docs_kit_build::docs_bundle_json(
+    let bundle = oxidt_docs_kit_build::docs_bundle_json(
         r#"{ "groups": [ { "group": "G", "pages": ["g/d"] } ] }"#,
         &[("g/d", mdx)],
         &[],

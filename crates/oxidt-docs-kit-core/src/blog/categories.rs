@@ -10,7 +10,7 @@ pub(super) fn build_categories(
     let mut slugs = HashSet::new();
     tags.iter().map(|tag| {
         let data = metadata.get(tag).cloned().unwrap_or_default();
-        let slug = data.slug.unwrap_or_else(|| dioxus_mdx::slugify(tag));
+        let slug = data.slug.unwrap_or_else(|| oxidt_mdx::slugify(tag));
         if slug.is_empty() || !slug.chars().all(|c| c.is_alphanumeric() || c == '-') {
             return Err(DocsKitError::BlogConfig(format!(
                 "tag {tag:?} needs a non-empty category slug containing only letters, numbers or hyphens"

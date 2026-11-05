@@ -7,7 +7,7 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "UI-framework-agnostic core of dioxus-docs-kit: content bundle, registries, search and SEO helpers"
+description = "UI-framework-agnostic core of oxidt-docs-kit and dioxus-docs-kit: content bundle, registries, search and SEO helpers"
 documentation = "https://docs.rs/oxidt-docs-kit-core"
 keywords = ["documentation", "mdx", "docs-site", "openapi", "search"]
 categories = ["web-programming"]
@@ -15,17 +15,17 @@ readme = "README.md"
 
 [dependencies]
 # Document types only: no renderer components, no parser.
-dioxus-mdx = { workspace = true }
+oxidt-mdx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 tracing = { workspace = true }
 
 [dev-dependencies]
 # Tests build real content bundles with the same code `build.rs` runs.
-dioxus-docs-kit-build = { workspace = true }
+oxidt-docs-kit-build = { workspace = true }
 
 [features]
 default = ["openapi"]
 # Read OpenAPI specs out of the bundle and index their operations. Off, the
 # registry ignores any specs in the bundle.
-openapi = ["dioxus-mdx/openapi"]
+openapi = ["oxidt-mdx/openapi"]

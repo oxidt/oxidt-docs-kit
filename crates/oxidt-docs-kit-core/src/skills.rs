@@ -1,6 +1,6 @@
 //! Agent skills (`skills/<name>/SKILL.md`) rendered as site pages.
 //!
-//! `dioxus-docs-kit-build`'s `SkillsBuild` parses the skills listed in
+//! `oxidt-docs-kit-build`'s `SkillsBuild` parses the skills listed in
 //! `_skills.json` into a bundle; [`SkillsRegistry`] answers lookups, the
 //! install command and the GitHub links for each one.
 
@@ -9,7 +9,7 @@ use crate::error::DocsKitError;
 use crate::registry::DocsHit;
 use crate::search::Field;
 use crate::seo::xml_escape;
-use dioxus_mdx::DocNode;
+use oxidt_mdx::DocNode;
 use serde::Deserialize;
 
 /// One agent skill, parsed from its `SKILL.md` at build time.
@@ -31,7 +31,7 @@ pub struct Skill {
 }
 
 /// One searchable skill section (split on h2–h4 headings), built by
-/// `dioxus-docs-kit-build` with its `*_lower` fields precomputed.
+/// `oxidt-docs-kit-build` with its `*_lower` fields precomputed.
 #[derive(PartialEq, Deserialize)]
 pub struct SkillsSearchEntry {
     pub slug: String,
@@ -92,7 +92,7 @@ impl SkillsConfig {
     /// Panics if the bundle fails to deserialize; see [`Self::try_build`].
     pub fn build(self) -> SkillsRegistry {
         self.try_build()
-            .unwrap_or_else(|e| panic!("dioxus-docs-kit: {e}"))
+            .unwrap_or_else(|e| panic!("oxidt-docs-kit: {e}"))
     }
 
     /// Build the registry, returning an error for an unreadable bundle.
@@ -313,7 +313,7 @@ mod tests {
             ),
             ("configure", "---\nname: configure\n---\nNo heading.\n"),
         ];
-        let bundle = dioxus_docs_kit_build::skills_bundle_json(manifest, skills)
+        let bundle = oxidt_docs_kit_build::skills_bundle_json(manifest, skills)
             .expect("generate skills bundle")
             .leak();
         SkillsConfig::new(bundle).with_base_path("/skills/").build()

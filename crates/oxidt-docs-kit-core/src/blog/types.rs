@@ -1,4 +1,4 @@
-use dioxus_mdx::DocNode;
+use oxidt_mdx::DocNode;
 use serde::Deserialize;
 
 /// Optional presentation and URL overrides for a tag's category page.
@@ -73,7 +73,7 @@ pub struct BlogPost {
 
 /// A searchable entry in the blog (one per post — blog search has no sections).
 ///
-/// Built by `dioxus-docs-kit-build`, `*_lower` fields included, so search never
+/// Built by `oxidt-docs-kit-build`, `*_lower` fields included, so search never
 /// re-lowercases per keystroke.
 #[derive(PartialEq, Deserialize)]
 pub struct BlogSearchEntry {

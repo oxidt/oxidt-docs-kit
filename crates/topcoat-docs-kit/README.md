@@ -5,11 +5,11 @@ apps, on the same build-time content pipeline as
 [dioxus-docs-kit](https://crates.io/crates/dioxus-docs-kit).
 
 Write Mintlify-style MDX plus a `_nav.json`, bundle it at build time with
-[`dioxus-docs-kit-build`](https://crates.io/crates/dioxus-docs-kit-build), and
+[`oxidt-docs-kit-build`](https://crates.io/crates/oxidt-docs-kit-build), and
 render it with server-side Topcoat components. No runtime script and no wasm:
 tabs, accordions and copy buttons work in plain HTML.
 
-**Early.** Topcoat itself is experimental, and so is this crate. Requires Rust 1.98.
+**Early.** Topcoat itself is experimental, and so is this crate. Requires Rust 1.99.
 
 ## What renders
 
@@ -51,16 +51,16 @@ Everything the Dioxus kit renders is ported.
 
 ```toml
 [dependencies]
-topcoat-docs-kit = "0.10"
+topcoat-docs-kit = "0.12"
 
 [build-dependencies]
-dioxus-docs-kit-build = "0.10"
+oxidt-docs-kit-build = "0.12"
 ```
 
 ```rust,ignore
 // build.rs
 fn main() {
-    dioxus_docs_kit_build::DocsBuild::new("docs/_nav.json").generate();
+    oxidt_docs_kit_build::DocsBuild::new("docs/_nav.json").generate();
 }
 ```
 
