@@ -440,7 +440,7 @@ dependencies = [
 
 [[package]]
 name = "hl-lite"
-version = "0.11.0"
+version = "0.12.0"
 
 [[package]]
 name = "hmac"
@@ -866,7 +866,7 @@ dependencies = [
 
 [[package]]
 name = "oxidt-docs"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "http",
  "http-body-util",
@@ -881,7 +881,7 @@ dependencies = [
 
 [[package]]
 name = "oxidt-docs-kit-build"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "oxidt-mdx",
  "serde",
@@ -891,7 +891,7 @@ dependencies = [
 
 [[package]]
 name = "oxidt-docs-kit-core"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "oxidt-docs-kit-build",
  "oxidt-mdx",
@@ -902,7 +902,7 @@ dependencies = [
 
 [[package]]
 name = "oxidt-mdx"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "markdown",
  "openapiv3",
@@ -1591,7 +1591,7 @@ dependencies = [
 
 [[package]]
 name = "topcoat-docs-example"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "oxidt-docs-kit-build",
  "tokio",
@@ -1601,7 +1601,7 @@ dependencies = [
 
 [[package]]
 name = "topcoat-docs-kit"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "hl-lite",
  "oxidt-docs-kit-build",

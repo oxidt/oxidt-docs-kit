@@ -11,7 +11,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.11.0"
+version = "0.12.0"
 authors = ["Hauke Jung <hauke.jung@outlook.de>"]
 edition = "2024"
 rust-version = "1.88"
@@ -20,10 +20,10 @@ repository = "https://github.com/oxidt/oxidt-docs-kit"
 homepage = "https://github.com/oxidt/oxidt-docs-kit"
 
 [workspace.dependencies]
-oxidt-mdx = { version = "0.11.0", path = "crates/oxidt-mdx", default-features = false }
-oxidt-docs-kit-core = { version = "0.11.0", path = "crates/oxidt-docs-kit-core", default-features = false }
-oxidt-docs-kit-build = { version = "0.11.0", path = "crates/oxidt-docs-kit-build" }
-hl-lite = { version = "0.11.0", path = "crates/hl-lite" }
+oxidt-mdx = { version = "0.12.0", path = "crates/oxidt-mdx", default-features = false }
+oxidt-docs-kit-core = { version = "0.12.0", path = "crates/oxidt-docs-kit-core", default-features = false }
+oxidt-docs-kit-build = { version = "0.12.0", path = "crates/oxidt-docs-kit-build" }
+hl-lite = { version = "0.12.0", path = "crates/hl-lite" }
 serde = { version = "1.0", features = ["derive"] }
 schemars = "1"
 serde_json = "1.0"

@@ -51,10 +51,10 @@ Everything the Dioxus kit renders is ported.
 
 ```toml
 [dependencies]
-topcoat-docs-kit = "0.11"
+topcoat-docs-kit = "0.12"
 
 [build-dependencies]
-oxidt-docs-kit-build = "0.11"
+oxidt-docs-kit-build = "0.12"
 ```
 
 ```rust,ignore

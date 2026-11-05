@@ -10,6 +10,21 @@ are released together. Up to 0.10 the workspace also held `dioxus-docs-kit` and
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-11-05
+
+### Added
+
+- **Markdown copies of doc pages.** `topcoat-docs-kit` adds `docs_markdown`,
+  which serves a page's source at `<base_path>/<page>.md` for agents, and
+  `docs_markdown_link`, which advertises it in `<head>`.
+
+### Changed
+
+- **BREAKING: Topcoat 0.11.** `topcoat-docs-kit` now builds on `topcoat` 0.11
+  and needs Rust 1.99.
+
+## [0.11.0] — 2026-10-21
+
 ### Changed
 
 - **BREAKING: Dioxus kit split out.** `dioxus-docs-kit`, the Dioxus renderer

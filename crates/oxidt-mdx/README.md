@@ -18,7 +18,7 @@ Formerly the parser half of `dioxus-mdx`.
 
 ```toml
 [dependencies]
-oxidt-mdx = "0.11"
+oxidt-mdx = "0.12"
 ```
 
 ```rust

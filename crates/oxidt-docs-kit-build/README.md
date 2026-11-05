@@ -11,7 +11,7 @@ Add it as a build dependency:
 
 ```toml
 [build-dependencies]
-oxidt-docs-kit-build = "0.11"
+oxidt-docs-kit-build = "0.12"
 ```
 
 Create a `build.rs`:
