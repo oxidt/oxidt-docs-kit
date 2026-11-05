@@ -45,6 +45,9 @@
 //! Search is a plain GET form: the header's search box submits to
 //! `<base_path>/search?q=…`, which you route to [`docs_search_page`].
 //!
+//! [`docs_markdown`] serves a page's Markdown source at `<base_path>/<page>.md`
+//! for agents; [`docs_markdown_link`] advertises it in `<head>`.
+//!
 //! OpenAPI specs registered in `build.rs` get endpoint pages under their
 //! prefix, listed in the sidebar by tag.
 //!
@@ -58,6 +61,7 @@ mod content;
 #[cfg(feature = "mermaid")]
 mod diagrams;
 mod icon;
+mod markdown;
 mod openapi;
 mod shell;
 mod theme;
@@ -69,6 +73,7 @@ pub use blog::{
 pub use content::doc_content;
 #[cfg(feature = "mermaid")]
 pub use diagrams::diagram_assets;
+pub use markdown::{docs_markdown, docs_markdown_link};
 pub use shell::{docs_head, docs_page, docs_search_head, docs_search_page};
 pub use theme::docs_theme_script;
 

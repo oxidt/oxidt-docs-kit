@@ -30,7 +30,7 @@ The Dioxus + DaisyUI shell (`dioxus-docs-kit`, the `dioxus-mdx` renderer, the Di
 
 | Crate | Path | Purpose |
 |-------|------|---------|
-| `topcoat-docs-kit` | `crates/topcoat-docs-kit/` | **Topcoat docs shell** (experimental) — server-rendered `docs_page`/`docs_head`/`doc_content`; own precompiled CSS. Rust 1.98. Example: `examples/topcoat-docs` |
+| `topcoat-docs-kit` | `crates/topcoat-docs-kit/` | **Topcoat docs shell** (experimental) — server-rendered `docs_page`/`docs_head`/`doc_content`; own precompiled CSS. Rust 1.99. Example: `examples/topcoat-docs` |
 | `oxidt-docs-kit-core` | `crates/oxidt-docs-kit-core/` | **UI-agnostic core** — bundle loader, `DocsRegistry`/`BlogRegistry`/`SkillsRegistry`, configs, search, SEO/XML helpers. Renders nothing |
 | `oxidt-docs-kit-build` | `crates/oxidt-docs-kit-build/` | Build-time pipeline: parses `_nav.json` + all MDX + OpenAPI into one JSON bundle |
 | `oxidt-mdx` | `crates/oxidt-mdx/` | MDX parser + document types, Lucide icon data, bundled Pele diagram assets. No UI framework |
@@ -60,4 +60,4 @@ The bundle carries a `version` field (`BUNDLE_VERSION`, mirrored in `crates/oxid
 ### Key Conventions
 
 - Cargo features (oxidt-mdx): `parse` gates the parser implementation (markdown-rs + regex) while the AST types and `src/text.rs` are always compiled; `openapi` is types only, `openapi-parse` adds `openapiv3`/`serde_yaml`. Frontmatter uses `oxidt_mdx::parse_yaml_lite`, not `serde_yaml`
-- CI toolchain: Rust 1.98.0 (Topcoat's MSRV); MSRV job checks the pipeline crates on 1.88. Bun for Tailwind and the Pele diagram tests
+- CI toolchain: Rust 1.99.0 (Topcoat's MSRV); MSRV job checks the pipeline crates on 1.88. Bun for Tailwind and the Pele diagram tests

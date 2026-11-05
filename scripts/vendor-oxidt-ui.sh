@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-TAG=v0.1.4
+TAG=v0.1.8
 DEST=vendor/oxidt-ui
 
 tmp=$(mktemp -d)

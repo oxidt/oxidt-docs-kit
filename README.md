@@ -14,7 +14,7 @@ DaisyUI shell.
 
 | Crate | Description |
 |-------|-------------|
-| [`topcoat-docs-kit`](crates/topcoat-docs-kit/) | Topcoat docs shell: layout, sidebar, search page, OpenAPI pages (experimental, Rust 1.98) |
+| [`topcoat-docs-kit`](crates/topcoat-docs-kit/) | Topcoat docs shell: layout, sidebar, search page, OpenAPI pages (experimental, Rust 1.99) |
 | [`oxidt-docs-kit-core`](crates/oxidt-docs-kit-core/) | Bundle loader, docs/blog/skills registries, search, SEO helpers; renders nothing |
 | [`oxidt-docs-kit-build`](crates/oxidt-docs-kit-build/) | Build-time helper: parses `_nav.json`, MDX and OpenAPI specs into one JSON bundle |
 | [`oxidt-mdx`](crates/oxidt-mdx/) | MDX parser and document types, no UI framework |

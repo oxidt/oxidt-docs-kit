@@ -10,16 +10,19 @@ use topcoat::{
     Result,
     context::Cx,
     router::{
-        CatchAllSegments, HeaderValue, Router, error::redirect, header, page, path_param,
-        query_params, response::IntoResponse, route,
+        Body, CatchAllSegments, HeaderValue, Router,
+        error::{redirect, rewrite},
+        header, page, path_param, query_params,
+        response::IntoResponse,
+        route,
     },
     view::{Child, View, component, view},
 };
 use topcoat_docs_kit::{
     BlogConfig, BlogRegistry, DocsConfig, DocsRegistry, STYLESHEET, ThemeConfig,
     blog_category_head, blog_category_page, blog_index_head, blog_index_page, blog_post_head,
-    blog_post_page, blog_search_page, docs_head, docs_page, docs_search_head, docs_search_page,
-    docs_theme_script,
+    blog_post_page, blog_search_page, docs_head, docs_markdown, docs_markdown_link, docs_page,
+    docs_search_head, docs_search_page, docs_theme_script,
 };
 
 static DOCS: LazyLock<DocsRegistry> = LazyLock::new(|| {
@@ -46,6 +49,7 @@ fn router() -> Router {
         .route(home)
         .route(stylesheet)
         .route(topcoat_docs_kit::diagram_assets)
+        .route(docs_md)
         .page(docs_index)
         .page(search)
         .page(docs)
@@ -110,7 +114,17 @@ path_param!(*doc_path);
 async fn docs(cx: &Cx) -> Result<impl View> {
     let segments: CatchAllSegments<'_> = path_param::<DocPath>(cx);
     let path = segments.collect::<Vec<_>>().join("/");
+    // Topcoat can't route `.md` beside this catch-all, so hand it to `docs_md`.
+    if path.ends_with(".md") {
+        return Err(rewrite(format!("/_docs/md/{path}"), Body::empty()).into());
+    }
     Ok(view! { docs_document(path: &path) })
+}
+
+#[route(GET "/_docs/md/{*doc_path}")]
+async fn docs_md(cx: &Cx) -> Result<impl IntoResponse> {
+    let segments: CatchAllSegments<'_> = path_param::<DocPath>(cx);
+    docs_markdown(&DOCS, &segments.collect::<Vec<_>>().join("/"))
 }
 
 #[component]
@@ -118,7 +132,10 @@ async fn docs_document(path: &str) -> Result<impl View> {
     Ok(view! {
         document(
             theme: DOCS.theme.as_ref(),
-            head: view! { docs_head(registry: &DOCS, path: path) }.into(),
+            head: view! {
+                docs_head(registry: &DOCS, path: path)
+                docs_markdown_link(registry: &DOCS, base_path: "/docs", path: path)
+            }.into(),
             docs_page(registry: &DOCS, base_path: "/docs", path: path)
         )
     })

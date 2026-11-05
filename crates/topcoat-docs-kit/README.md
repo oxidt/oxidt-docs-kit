@@ -9,7 +9,7 @@ Write Mintlify-style MDX plus a `_nav.json`, bundle it at build time with
 render it with server-side Topcoat components. No runtime script and no wasm:
 tabs, accordions and copy buttons work in plain HTML.
 
-**Early.** Topcoat itself is experimental, and so is this crate. Requires Rust 1.98.
+**Early.** Topcoat itself is experimental, and so is this crate. Requires Rust 1.99.
 
 ## What renders
 
